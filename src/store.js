@@ -10,15 +10,15 @@ const shuffleArray = (array) => {
 };
 
 export const useGameStore = create((set, get) => ({
-  phase: 'lobby', // lobby, peek, interrogation, choice, resolution, gameover
+  phase: 'lobby', 
   players: [], 
   initialRoster: [],
   winStreak: 0,
-  briefcaseStatus: null,
+  cardStatus: null, // SAFE or ELIMINATE
   timer: 60,
   timerRunning: false,
   intervalId: null,
-  eliminationResult: null, // Stores who lost during resolution
+  roundResult: null,
 
   addPlayer: (name) => set((state) => {
     const newPlayer = { name, id: crypto.randomUUID() };
@@ -38,10 +38,10 @@ export const useGameStore = create((set, get) => ({
     const shuffled = shuffleArray(state.players);
     return {
       players: shuffled,
-      initialRoster: [...shuffled],
+      initialRoster: [...shuffled], // Save names for Play Again
       winStreak: 0,
       phase: 'peek',
-      briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
+      cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
     };
   }),
 
@@ -70,27 +70,26 @@ export const useGameStore = create((set, get) => ({
 
   makeChoice: (choice) => {
     const state = get();
-    const status = state.briefcaseStatus;
-    const dealer = state.players[0];
-    const challenger = state.players[1];
+    const status = state.cardStatus;
+    const p1 = state.players[0]; // The one who peeked
+    const p2 = state.players[1]; // The challenger
     
-    let dealerLost = false;
+    let p1Lost = false;
 
-    // Strict Rule Execution
     if (choice === 'STEAL') {
-      if (status === 'ELIMINATE') dealerLost = false; // Challenger Eliminated
-      if (status === 'SAFE') dealerLost = true;       // Dealer Eliminated
+      if (status === 'ELIMINATE') p1Lost = false; // P2 steals the trap and loses
+      if (status === 'SAFE') p1Lost = true;       // P2 steals the safe spot, P1 loses
     } else if (choice === 'LEAVE') {
-      if (status === 'ELIMINATE') dealerLost = true;  // Dealer Eliminated
-      if (status === 'SAFE') dealerLost = false;      // Challenger Eliminated
+      if (status === 'ELIMINATE') p1Lost = true;  // P1 is stuck with the trap and loses
+      if (status === 'SAFE') p1Lost = false;      // P2 leaves the safe spot, P2 loses
     }
 
     set({ 
       phase: 'resolution', 
-      eliminationResult: {
-        loser: dealerLost ? dealer : challenger,
-        winner: dealerLost ? challenger : dealer,
-        dealerLost,
+      roundResult: {
+        loser: p1Lost ? p1 : p2,
+        winner: p1Lost ? p2 : p1,
+        p1Lost,
         choice
       }
     });
@@ -101,35 +100,44 @@ export const useGameStore = create((set, get) => ({
     const nextPlayers = [...state.players];
     let nextWinStreak = state.winStreak;
 
-    // The Winner stays as Dealer (index 0). Loser is deleted. Queue shifts up.
-    if (state.eliminationResult.dealerLost) {
-      nextPlayers.splice(0, 1); // Delete Dealer
-      nextWinStreak = 0;        // Challenger becomes Dealer, streak resets
+    // King of the Hill Logic: Loser goes to the back of the line.
+    if (state.roundResult.p1Lost) {
+      // P1 lost. Move P1 to the end. P2 becomes the new P1.
+      const loser = nextPlayers.shift(); 
+      nextPlayers.push(loser);
+      nextWinStreak = 1; // P2 just got their first win
     } else {
-      nextPlayers.splice(1, 1); // Delete Challenger
-      nextWinStreak += 1;       // Dealer stays, streak increments
+      // P2 lost. Move P2 to the end. P1 stays at the front.
+      const loser = nextPlayers.splice(1, 1)[0]; 
+      nextPlayers.push(loser);
+      nextWinStreak += 1; // P1 increases their win streak
     }
 
-    if (nextPlayers.length <= 1) {
+    // Check if the current P1 has defeated everyone else
+    const targetWins = state.initialRoster.length - 1;
+
+    if (nextWinStreak >= targetWins) {
       set({ phase: 'gameover', players: nextPlayers, winStreak: nextWinStreak });
     } else {
+      // Round continues with a new random card
       set({ 
         phase: 'peek', 
         players: nextPlayers, 
         winStreak: nextWinStreak, 
-        briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', 
+        cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', 
         timer: 60,
-        eliminationResult: null
+        roundResult: null
       });
     }
   },
 
   playAgain: () => set((state) => ({
+    // Instantly loads the exact same friends from the last game
     players: [...state.initialRoster],
     winStreak: 0,
     timer: 60,
     phase: 'peek',
-    briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE',
-    eliminationResult: null
+    cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE',
+    roundResult: null
   }))
 }));
