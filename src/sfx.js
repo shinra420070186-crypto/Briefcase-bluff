@@ -16,7 +16,7 @@ class ProceduralAudioEngine {
     if (slideFreq) osc.frequency.exponentialRampToValueAtTime(slideFreq, this.ctx.currentTime + duration);
 
     gain.gain.setValueAtTime(0, this.ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(vol, this.ctx.currentTime + 0.05);
+    gain.gain.linearRampToValueAtTime(vol, this.ctx.currentTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
 
     osc.connect(gain);
@@ -26,7 +26,10 @@ class ProceduralAudioEngine {
     osc.stop(this.ctx.currentTime + duration);
   }
 
-  tap() { this._playTone(800, 'sine', 0.1, 0.3); }
+  // Premium, soft UI click
+  tap() { this._playTone(700, 'sine', 0.04, 0.15); }
+  
+  // Untouched - The ones you liked!
   addPlayer() { this._playTone(440, 'sine', 0.15, 0.4); setTimeout(() => this._playTone(660, 'sine', 0.2, 0.4), 100); }
   removePlayer() { this._playTone(660, 'triangle', 0.15, 0.4); setTimeout(() => this._playTone(440, 'triangle', 0.2, 0.4), 100); }
   
@@ -56,8 +59,16 @@ class ProceduralAudioEngine {
     osc.stop(this.ctx.currentTime + 1.5);
   }
 
-  latchOpen() { this._playTone(100, 'square', 0.05, 0.5); setTimeout(() => this._playTone(150, 'square', 0.05, 0.5), 30); }
-  latchClose() { this._playTone(150, 'square', 0.05, 0.5); setTimeout(() => this._playTone(100, 'square', 0.05, 0.5), 40); }
+  // Heavy, mechanical double-click for the briefcase latch
+  latchOpen() { 
+    this._playTone(60, 'square', 0.05, 0.7); 
+    setTimeout(() => this._playTone(180, 'sawtooth', 0.03, 0.4), 30); 
+  }
+  latchClose() { 
+    this._playTone(180, 'sawtooth', 0.03, 0.4); 
+    setTimeout(() => this._playTone(60, 'square', 0.05, 0.7), 20); 
+  }
+  
   timerTick() { this._playTone(1000, 'triangle', 0.1, 0.2); }
   timerUrgent() { this._playTone(1200, 'square', 0.1, 0.3); }
   steal() { this._playTone(300, 'sawtooth', 0.5, 0.4, 800); }
