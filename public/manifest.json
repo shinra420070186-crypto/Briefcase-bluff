@@ -9,13 +9,13 @@
   "description": "A high-stakes social deduction party game.",
   "icons": [
     {
-      "src": "/edited-image.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/edited-image.png",
+      "src": "/icon-192.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
