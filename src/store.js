@@ -15,9 +15,6 @@ export const useGameStore = create((set, get) => ({
   initialRoster: [],
   winStreak: 0,
   cardStatus: null, // SAFE or ELIMINATE
-  timer: 60,
-  timerRunning: false,
-  intervalId: null,
   roundResult: null,
 
   addPlayer: (name) => set((state) => {
@@ -38,50 +35,30 @@ export const useGameStore = create((set, get) => ({
     const shuffled = shuffleArray(state.players);
     return {
       players: shuffled,
-      initialRoster: [...shuffled], // Save names for Play Again
+      initialRoster: [...shuffled],
       winStreak: 0,
       phase: 'peek',
       cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
     };
   }),
 
-  startInterrogation: () => {
-    const state = get();
-    if (state.intervalId) clearInterval(state.intervalId);
-
-    const intervalId = setInterval(() => {
-      const currentState = get();
-      if (currentState.timer > 0) {
-        set({ timer: currentState.timer - 1 });
-      } else {
-        clearInterval(currentState.intervalId);
-        set({ timerRunning: false });
-      }
-    }, 1000);
-
-    set({ phase: 'interrogation', timer: 60, timerRunning: true, intervalId });
-  },
-
-  goToChoicePhase: () => {
-    const state = get();
-    if (state.intervalId) clearInterval(state.intervalId);
-    set({ phase: 'choice', timerRunning: false });
-  },
+  goToChoicePhase: () => set({ phase: 'choice' }),
 
   makeChoice: (choice) => {
     const state = get();
     const status = state.cardStatus;
-    const p1 = state.players[0]; // The one who peeked
+    const p1 = state.players[0]; // The one holding the phone
     const p2 = state.players[1]; // The challenger
     
     let p1Lost = false;
 
+    // STEAL means P2 takes the card. LEAVE means P1 keeps the card.
     if (choice === 'STEAL') {
-      if (status === 'ELIMINATE') p1Lost = false; // P2 steals the trap and loses
-      if (status === 'SAFE') p1Lost = true;       // P2 steals the safe spot, P1 loses
+      if (status === 'ELIMINATE') p1Lost = false; 
+      if (status === 'SAFE') p1Lost = true;       
     } else if (choice === 'LEAVE') {
-      if (status === 'ELIMINATE') p1Lost = true;  // P1 is stuck with the trap and loses
-      if (status === 'SAFE') p1Lost = false;      // P2 leaves the safe spot, P2 loses
+      if (status === 'ELIMINATE') p1Lost = true;  
+      if (status === 'SAFE') p1Lost = false;      
     }
 
     set({ 
@@ -100,42 +77,35 @@ export const useGameStore = create((set, get) => ({
     const nextPlayers = [...state.players];
     let nextWinStreak = state.winStreak;
 
-    // King of the Hill Logic: Loser goes to the back of the line.
+    // King of the Hill: Loser to the back of the line.
     if (state.roundResult.p1Lost) {
-      // P1 lost. Move P1 to the end. P2 becomes the new P1.
       const loser = nextPlayers.shift(); 
       nextPlayers.push(loser);
-      nextWinStreak = 1; // P2 just got their first win
+      nextWinStreak = 1; // New king gets 1 win
     } else {
-      // P2 lost. Move P2 to the end. P1 stays at the front.
       const loser = nextPlayers.splice(1, 1)[0]; 
       nextPlayers.push(loser);
-      nextWinStreak += 1; // P1 increases their win streak
+      nextWinStreak += 1; // Current king streak increases
     }
 
-    // Check if the current P1 has defeated everyone else
     const targetWins = state.initialRoster.length - 1;
 
     if (nextWinStreak >= targetWins) {
       set({ phase: 'gameover', players: nextPlayers, winStreak: nextWinStreak });
     } else {
-      // Round continues with a new random card
       set({ 
         phase: 'peek', 
         players: nextPlayers, 
         winStreak: nextWinStreak, 
         cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', 
-        timer: 60,
         roundResult: null
       });
     }
   },
 
   playAgain: () => set((state) => ({
-    // Instantly loads the exact same friends from the last game
     players: [...state.initialRoster],
     winStreak: 0,
-    timer: 60,
     phase: 'peek',
     cardStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE',
     roundResult: null
