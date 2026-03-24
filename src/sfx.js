@@ -26,10 +26,10 @@ class ProceduralAudioEngine {
     osc.stop(this.ctx.currentTime + duration);
   }
 
-  // Premium, soft UI click
+  // Refined, premium soft click
   tap() { this._playTone(700, 'sine', 0.04, 0.15); }
   
-  // Untouched - The ones you liked!
+  // The satisfying name entry sounds - Untouched
   addPlayer() { this._playTone(440, 'sine', 0.15, 0.4); setTimeout(() => this._playTone(660, 'sine', 0.2, 0.4), 100); }
   removePlayer() { this._playTone(660, 'triangle', 0.15, 0.4); setTimeout(() => this._playTone(440, 'triangle', 0.2, 0.4), 100); }
   
@@ -59,7 +59,7 @@ class ProceduralAudioEngine {
     osc.stop(this.ctx.currentTime + 1.5);
   }
 
-  // Heavy, mechanical double-click for the briefcase latch
+  // Heavy mechanical double-click for the briefcase latch
   latchOpen() { 
     this._playTone(60, 'square', 0.05, 0.7); 
     setTimeout(() => this._playTone(180, 'sawtooth', 0.03, 0.4), 30); 
