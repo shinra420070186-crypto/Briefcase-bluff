@@ -1,10 +1,15 @@
-const cacheName = 'deck-bluff-pwa-v1';
-const filesToCache = ['/', '/index.html', '/manifest.json'];
+const cacheName = 'deck-bluff-pwa-v2';
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(cacheName).then(cache => cache.addAll(filesToCache)));
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
