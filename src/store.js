@@ -10,16 +10,15 @@ const shuffleArray = (array) => {
 };
 
 export const useGameStore = create((set, get) => ({
-  phase: 'lobby',
+  phase: 'lobby', // lobby, peek, interrogation, choice, resolution, gameover
   players: [], 
   initialRoster: [],
-  dealerIndex: 0,
-  challengerIndex: 1,
   winStreak: 0,
   briefcaseStatus: null,
   timer: 60,
   timerRunning: false,
   intervalId: null,
+  eliminationResult: null, // Stores who lost during resolution
 
   addPlayer: (name) => set((state) => {
     const newPlayer = { name, id: crypto.randomUUID() };
@@ -40,11 +39,8 @@ export const useGameStore = create((set, get) => ({
     return {
       players: shuffled,
       initialRoster: [...shuffled],
-      dealerIndex: 0,
-      challengerIndex: 1,
       winStreak: 0,
       phase: 'peek',
-      // FIX: Status is generated instantly upon starting the game
       briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
     };
   }),
@@ -75,43 +71,65 @@ export const useGameStore = create((set, get) => ({
   makeChoice: (choice) => {
     const state = get();
     const status = state.briefcaseStatus;
+    const dealer = state.players[0];
+    const challenger = state.players[1];
+    
     let dealerLost = false;
 
+    // Strict Rule Execution
     if (choice === 'STEAL') {
-      if (status === 'ELIMINATE') dealerLost = false;
-      if (status === 'SAFE') dealerLost = true;
+      if (status === 'ELIMINATE') dealerLost = false; // Challenger Eliminated
+      if (status === 'SAFE') dealerLost = true;       // Dealer Eliminated
     } else if (choice === 'LEAVE') {
-      if (status === 'ELIMINATE') dealerLost = true;
-      if (status === 'SAFE') dealerLost = false;
+      if (status === 'ELIMINATE') dealerLost = true;  // Dealer Eliminated
+      if (status === 'SAFE') dealerLost = false;      // Challenger Eliminated
     }
 
+    set({ 
+      phase: 'resolution', 
+      eliminationResult: {
+        loser: dealerLost ? dealer : challenger,
+        winner: dealerLost ? challenger : dealer,
+        dealerLost,
+        choice
+      }
+    });
+  },
+
+  nextRound: () => {
+    const state = get();
     const nextPlayers = [...state.players];
     let nextWinStreak = state.winStreak;
 
-    if (dealerLost) {
-      nextPlayers.splice(0, 1);
-      nextWinStreak = 0;
+    // The Winner stays as Dealer (index 0). Loser is deleted. Queue shifts up.
+    if (state.eliminationResult.dealerLost) {
+      nextPlayers.splice(0, 1); // Delete Dealer
+      nextWinStreak = 0;        // Challenger becomes Dealer, streak resets
     } else {
-      nextPlayers.splice(1, 1);
-      nextWinStreak += 1;
+      nextPlayers.splice(1, 1); // Delete Challenger
+      nextWinStreak += 1;       // Dealer stays, streak increments
     }
 
     if (nextPlayers.length <= 1) {
       set({ phase: 'gameover', players: nextPlayers, winStreak: nextWinStreak });
     } else {
-      // FIX: Status generated instantly for the next round
-      set({ phase: 'peek', players: nextPlayers, winStreak: nextWinStreak, briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', timer: 60 });
+      set({ 
+        phase: 'peek', 
+        players: nextPlayers, 
+        winStreak: nextWinStreak, 
+        briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', 
+        timer: 60,
+        eliminationResult: null
+      });
     }
   },
 
   playAgain: () => set((state) => ({
     players: [...state.initialRoster],
-    dealerIndex: 0,
-    challengerIndex: 1,
     winStreak: 0,
     timer: 60,
     phase: 'peek',
-    // FIX: Status generated instantly for the rematch
-    briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
+    briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE',
+    eliminationResult: null
   }))
 }));
