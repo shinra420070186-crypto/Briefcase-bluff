@@ -191,7 +191,8 @@ export default function GameBoard() {
             </button>
             <button 
               onClick={() => handleAction(() => makeChoice('LEAVE'), sfx.tap)}
-              className="flex-1 py-5 bg-white border-2 border-slate-200 rounded-2xl text-slate-800 font-black tracking-widest shadow-md active:bg-slate-100 transition-colors"
+              // FIX: Changed border-slate-200 to border-[#B8E3E9] and active:bg-slate-100 to active:bg-[#B8E3E9] to match "TAKE" button.
+              className="flex-1 py-5 bg-white border-2 border-[#B8E3E9] rounded-2xl text-slate-800 font-black tracking-widest shadow-md active:bg-[#B8E3E9] transition-colors"
             >
               PASS
             </button>
