@@ -43,13 +43,11 @@ export const useGameStore = create((set, get) => ({
       dealerIndex: 0,
       challengerIndex: 1,
       winStreak: 0,
-      phase: 'peek'
+      phase: 'peek',
+      // FIX: Status is generated instantly upon starting the game
+      briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
     };
   }),
-
-  peekAtBriefcase: () => set(() => ({
-    briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
-  })),
 
   startInterrogation: () => {
     const state = get();
@@ -101,7 +99,8 @@ export const useGameStore = create((set, get) => ({
     if (nextPlayers.length <= 1) {
       set({ phase: 'gameover', players: nextPlayers, winStreak: nextWinStreak });
     } else {
-      set({ phase: 'peek', players: nextPlayers, winStreak: nextWinStreak, briefcaseStatus: null, timer: 60 });
+      // FIX: Status generated instantly for the next round
+      set({ phase: 'peek', players: nextPlayers, winStreak: nextWinStreak, briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE', timer: 60 });
     }
   },
 
@@ -110,8 +109,9 @@ export const useGameStore = create((set, get) => ({
     dealerIndex: 0,
     challengerIndex: 1,
     winStreak: 0,
-    briefcaseStatus: null,
     timer: 60,
-    phase: 'peek'
+    phase: 'peek',
+    // FIX: Status generated instantly for the rematch
+    briefcaseStatus: Math.random() > 0.5 ? 'SAFE' : 'ELIMINATE'
   }))
 }));
