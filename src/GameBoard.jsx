@@ -4,7 +4,6 @@ import { sfx } from './sfx';
 
 const FlipCard = ({ isFlipped, status }) => {
   return (
-    // Scaled the card down slightly to fit perfectly on mobile screens
     <div className="my-6 relative" style={{ perspective: '1200px', width: '14rem', height: '21rem' }}>
       <div 
         className="w-full h-full relative" 
@@ -52,7 +51,8 @@ const FlipCard = ({ isFlipped, status }) => {
 export default function GameBoard() {
   const { 
     phase, players, winStreak, initialRoster, recentNames,
-    startGame, goToChoicePhase, makeChoice, nextRound, addPlayer, removePlayer, cardStatus, roundResult
+    startGame, goToChoicePhase, makeChoice, nextRound, addPlayer, removePlayer, cardStatus, roundResult,
+    playAgain
   } = useGameStore();
 
   const [newPlayerName, setNewPlayerName] = useState('');
@@ -92,8 +92,13 @@ export default function GameBoard() {
 
   const availableRecentNames = recentNames.filter(n => !players.some(p => p.name === n));
 
+  // FIX: Compute correct displayed streak — the store already holds the correct value,
+  // but during resolution we want to show what it WILL BE after nextRound resolves.
+  const displayStreak = roundResult
+    ? (roundResult.p1Lost ? 1 : winStreak + 1)
+    : winStreak;
+
   return (
-    // FIX: Removed "touch-none" and "overflow-hidden". Added "overflow-x-hidden min-h-[100dvh]" so you can scroll to the button if needed!
     <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-[#FAF9F6] font-sans text-slate-800 select-none overflow-x-hidden w-full">
       
       {/* --- LOBBY --- */}
@@ -123,6 +128,7 @@ export default function GameBoard() {
               type="text" 
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
               placeholder="Enter Name"
               className="flex-1 p-4 bg-white border border-slate-200 rounded-2xl text-slate-800 outline-none focus:border-[#B8E3E9] transition-colors font-bold shadow-sm"
             />
@@ -191,7 +197,6 @@ export default function GameBoard() {
             </button>
             <button 
               onClick={() => handleAction(() => makeChoice('LEAVE'), sfx.tap)}
-              // FIX: Changed border-slate-200 to border-[#B8E3E9] and active:bg-slate-100 to active:bg-[#B8E3E9] to match "TAKE" button.
               className="flex-1 py-5 bg-white border-2 border-[#B8E3E9] rounded-2xl text-slate-800 font-black tracking-widest shadow-md active:bg-[#B8E3E9] transition-colors"
             >
               PASS
@@ -210,7 +215,10 @@ export default function GameBoard() {
             <h2 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
             <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Eliminated</p>
             <div className="h-px w-1/3 bg-slate-100 mx-auto my-3"></div>
-            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">Win Streak: {players[0]?.name === roundResult.winner.name ? winStreak + 1 : 1} / {Math.max(initialRoster.length - 1, 2)}</p>
+            {/* FIX: Use pre-computed displayStreak instead of fragile inline logic */}
+            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">
+              Win Streak: {displayStreak} / {Math.max(initialRoster.length - 1, 2)}
+            </p>
           </div>
 
           <button 
@@ -229,8 +237,9 @@ export default function GameBoard() {
           <h2 className="text-4xl font-black text-slate-800 uppercase tracking-widest mb-4">{players[0]?.name}</h2>
           <p className="text-emerald-500 font-bold tracking-[0.3em] mb-16 uppercase text-xs">Game Champion</p>
           
+          {/* FIX: Use playAgain from store (reshuffles) instead of window.location.reload() */}
           <button 
-            onClick={() => handleAction(() => window.location.reload())}
+            onClick={() => handleAction(playAgain)}
             className="px-8 py-4 bg-white border-2 border-slate-200 shadow-md rounded-2xl text-slate-800 font-bold tracking-[0.2em] active:bg-slate-50 transition-colors"
           >
             PLAY AGAIN
