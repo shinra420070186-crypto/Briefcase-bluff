@@ -1,0 +1,21 @@
+{
+  "name": "The Deck: Briefcase Bluff",
+  "short_name": "The Deck",
+  "start_url": "/.",
+  "display": "standalone",
+  "theme_color": "#B8E3E9",
+  "background_color": "#FAF9F6",
+  "description": "A high-stakes social deduction party game.",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
