@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from './store';
 import { sfx } from './sfx';
 
-// Background Animations (Stars & Meteors)
+// Background Animations & New Neon Rule Card CSS
 const MidnightSky = () => (
   <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ backgroundColor: '#050505' }}>
     <style>{`
@@ -43,6 +43,79 @@ const MidnightSky = () => (
         100% { transform: scale3d(1, 1, 1); }
       }
       .animate-jello-vertical { animation: jello-vertical 0.7s both; }
+
+      /* Pravins01 Neon Card CSS (Adjusted for Rule Text) */
+      .neon-card {
+        position: relative;
+        width: 280px;
+        height: 380px;
+        background-color: #000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 24px;
+        gap: 14px;
+        border-radius: 8px;
+        color: white;
+        text-align: left;
+        cursor: pointer;
+      }
+      .neon-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        left: -5px;
+        margin: auto;
+        width: 290px;
+        height: 390px;
+        border-radius: 10px;
+        background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% );
+        z-index: -10;
+        pointer-events: none;
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .neon-card::after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% );
+        transform: translate3d(0, 0, 0) scale(0.95);
+        filter: blur(20px);
+      }
+      .neon-heading {
+        font-size: 22px;
+        text-transform: uppercase;
+        font-weight: 900;
+        text-align: center;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+      .rule-block {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .rule-title {
+        color: #e81cff;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .rule-desc {
+        font-size: 11px;
+        color: #ccc;
+        line-height: 1.4;
+      }
+      /* Hover/Tap effect to trigger the rotating border */
+      .neon-card:hover::after, .neon-card:active::after {
+        filter: blur(30px);
+      }
+      .neon-card:hover::before, .neon-card:active::before {
+        transform: rotate(-90deg) scaleX(1.35) scaleY(0.74);
+      }
     `}</style>
     <div className="stars stars-1"></div>
     <div className="stars stars-2"></div>
@@ -105,9 +178,8 @@ export default function GameBoard() {
   const [isHoldingCard, setIsHoldingCard] = useState(false);
   const [hasPeeked, setHasPeeked] = useState(false);
   
-  // Rule Modal Controls
+  // Rule Modal State
   const [showRules, setShowRules] = useState(false);
-  const [activeRuleTab, setActiveRuleTab] = useState(0);
 
   useEffect(() => {
     if (phase === 'peek') setHasPeeked(false);
@@ -146,66 +218,40 @@ export default function GameBoard() {
     ? (roundResult.p1Lost ? 1 : winStreak + 1)
     : winStreak;
 
-  // Optimized, lag-free Uiverse Accordion Tab Component
-  const RuleTab = ({ index, title, desc }) => {
-    const isActive = activeRuleTab === index;
-    return (
-      <div 
-        onClick={() => handleAction(() => setActiveRuleTab(index))}
-        style={{ flex: isActive ? 4 : 1 }}
-        className="h-full relative overflow-hidden cursor-pointer rounded-[4px] transition-all duration-500 ease-out bg-[#212121] border border-[#ff5a91]"
-      >
-        {/* Title Container - Absolute to prevent reflow */}
-        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out ${isActive ? 'top-4 h-auto' : 'top-0 h-full'}`}>
-          <span 
-            className={`text-center uppercase text-[#ff568e] tracking-[0.1em] font-black whitespace-nowrap transition-all duration-500 ease-out ${isActive ? 'rotate-0 text-sm sm:text-base' : '-rotate-90 text-[10px] sm:text-xs'}`}
-          >
-            {title}
-          </span>
-        </div>
-        
-        {/* Description Container - Fades in without breaking layout */}
-        <div 
-          className={`absolute inset-0 flex items-center justify-center px-4 text-center text-slate-200 text-[11px] sm:text-[13px] leading-relaxed transition-opacity duration-300 ${isActive ? 'opacity-100 delay-200 pointer-events-auto' : 'opacity-0 delay-0 pointer-events-none'}`} 
-          style={{ top: isActive ? '30px' : '0' }}
-        >
-          <p dangerouslySetInnerHTML={{ __html: desc }}></p>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-[#FAF9F6] font-sans text-slate-800 select-none overflow-x-hidden w-full">
       
-      {/* --- INTERACTIVE RULE ACCORDION OVERLAY --- */}
+      {/* --- NEON CARD RULE MODAL --- */}
       {showRules && (
         <div 
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
           onClick={() => handleAction(() => setShowRules(false))} 
         >
-          <div 
-            className="w-full max-w-[340px] h-[400px] rounded-[4px] bg-[#212121] flex gap-[5px] p-[0.4em] shadow-2xl" 
-            onClick={(e) => e.stopPropagation()} 
-          >
-            <RuleTab 
-              index={0} title="1. PEEK" 
-              desc='Hold the card to view it secretly.<br/><br/><span style="color:#34d399; font-weight:bold;">SAFE</span> or <span style="color:#fb7185; font-weight:bold;">ELIMINATE</span>.' 
-            />
-            <RuleTab 
-              index={1} title="2. FACE" 
-              desc="Keep a completely straight face, bluff, and hand the phone over." 
-            />
-            <RuleTab 
-              index={2} title="3. FATE" 
-              desc="The Challenger reads your face and chooses to <strong style='color:#7BB2BB'>TAKE</strong> or <strong style='color:#7BB2BB'>PASS</strong>." 
-            />
-            <RuleTab 
-              index={3} title="4. OUT!" 
-              desc='Whoever ends up holding the <span style="color:#fb7185; font-weight:bold;">ELIMINATE</span> card is immediately knocked out!' 
-            />
+          {/* Card container stops click propagation */}
+          <div className="neon-card" onClick={(e) => e.stopPropagation()}>
+            <p className="neon-heading">How To Play</p>
+            
+            <div className="rule-block">
+              <p className="rule-title">1. The Peek</p>
+              <p className="rule-desc">Secretly hold the card to view it. It will either be SAFE or ELIMINATE.</p>
+            </div>
+
+            <div className="rule-block">
+              <p className="rule-title">2. Poker Face</p>
+              <p className="rule-desc">Keep a straight face, hide your reaction, and pass the phone.</p>
+            </div>
+
+            <div className="rule-block">
+              <p className="rule-title">3. Take or Pass</p>
+              <p className="rule-desc">The Challenger reads your face and decides to TAKE or PASS the card.</p>
+            </div>
+
+            <div className="rule-block">
+              <p className="rule-title">4. Elimination</p>
+              <p className="rule-desc">Whoever is holding the ELIMINATE card when it flips is out!</p>
+            </div>
           </div>
-          <p className="text-center text-white/50 text-xs mt-6 tracking-widest uppercase">Tap background to close</p>
+          <p className="text-center text-white/50 text-xs mt-8 tracking-widest uppercase">Tap background to close</p>
         </div>
       )}
 
@@ -215,21 +261,21 @@ export default function GameBoard() {
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
         <>
-          {/* UIVERSE FAQ BUTTON - FIXED TOP LEFT & SMALLER */}
+          {/* FAQ BUTTON - FIXED TOP LEFT & SMALLER (32x32) */}
           <button 
-            onClick={() => handleAction(() => { setShowRules(true); setActiveRuleTab(0); })}
-            className="group fixed top-6 left-6 w-[40px] h-[40px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_10px_10px_rgba(0,0,0,0.15)] z-40"
+            onClick={() => handleAction(() => setShowRules(true))}
+            className="group fixed top-6 left-6 w-[32px] h-[32px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.15)] z-40"
             style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="h-[1.2em] fill-white group-hover:animate-jello-vertical">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="h-[1em] fill-white group-hover:animate-jello-vertical">
               <path d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path>
             </svg>
             <span 
-              className="absolute top-[-20px] opacity-0 group-hover:top-[-45px] group-hover:opacity-100 transition-all duration-300 text-white px-[10px] py-[5px] rounded-[5px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-[10px] font-bold"
+              className="absolute top-[-20px] opacity-0 group-hover:top-[-35px] group-hover:opacity-100 transition-all duration-300 text-white px-[8px] py-[4px] rounded-[5px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-[9px] font-bold"
               style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
             >
               FAQ
-              <span className="absolute -bottom-[4px] w-[8px] h-[8px] bg-[#ff2525] rotate-45 z-[-1]"></span>
+              <span className="absolute -bottom-[4px] w-[6px] h-[6px] bg-[#ff2525] rotate-45 z-[-1]"></span>
             </span>
           </button>
 
@@ -362,49 +408,4 @@ export default function GameBoard() {
 
           <div className="mt-4 mb-6 w-full max-w-xs bg-white border border-slate-100 shadow-sm rounded-2xl py-5">
             <h2 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
-            <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Eliminated</p>
-            <div className="h-px w-1/3 bg-slate-100 mx-auto my-3"></div>
-            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">
-              Win Streak: {displayStreak} / {Math.max(initialRoster.length - 1, 2)}
-            </p>
-          </div>
-
-          <button 
-            onClick={() => handleAction(nextRound)}
-            className="w-full max-w-xs py-5 bg-slate-800 text-white rounded-2xl font-black tracking-[0.2em] shadow-xl active:scale-95 transition-transform"
-          >
-            NEXT MATCH
-          </button>
-        </div>
-      )}
-
-      {/* --- GAMEOVER PHASE --- */}
-      {phase === 'gameover' && (
-        <div className="relative z-10 flex flex-col items-center animate-fade-in text-center mt-16 w-full">
-          
-          {/* FIXED TOP RIGHT BACK BUTTON */}
-          <button 
-            onClick={() => handleAction(backToLobby)}
-            className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-white border border-slate-200 shadow-sm rounded-lg text-slate-600 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
-          >
-            <svg className="h-4 w-4 mr-1 transition-transform duration-300 group-active:-translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor">
-              <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
-            </svg>
-            BACK
-          </button>
-
-          <div className="w-20 h-20 bg-[#B8E3E9] shadow-[0_10px_30px_rgba(184,227,233,0.5)] flex items-center justify-center rounded-full text-3xl mb-6">👑</div>
-          <h2 className="text-4xl font-black text-slate-800 uppercase tracking-widest mb-4">{players[0]?.name}</h2>
-          <p className="text-emerald-500 font-bold tracking-[0.3em] mb-16 uppercase text-xs">Game Champion</p>
-          
-          <button 
-            onClick={() => handleAction(playAgain)}
-            className="px-8 py-4 bg-white border-2 border-slate-200 shadow-md rounded-2xl text-slate-800 font-bold tracking-[0.2em] active:bg-slate-50 transition-colors"
-          >
-            PLAY AGAIN
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+            <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Elimi
