@@ -142,7 +142,6 @@ export default function GameBoard() {
             ))}
           </div>
 
-          {/* EXACT UIVERSE NEON BUTTON */}
           <button 
             onClick={() => handleAction(startGame)}
             disabled={players.length < 2}
@@ -152,7 +151,6 @@ export default function GameBoard() {
                 : 'bg-white text-slate-900 active:scale-[0.97]'
             }`}
           >
-            {/* The True Uiverse Neon Glow */}
             <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
               <div 
                 className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
@@ -161,7 +159,6 @@ export default function GameBoard() {
                 }}
               ></div>
             </div>
-
             <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
           </button>
 
@@ -203,18 +200,37 @@ export default function GameBoard() {
           <p className="text-slate-400 tracking-widest uppercase text-[10px] mt-6 mb-3 font-bold">Determine Fate</p>
 
           <div className="flex w-full max-w-xs gap-4">
+            
+            {/* UIVERSE 3D 'TAKE' BUTTON */}
             <button 
               onClick={() => handleAction(() => makeChoice('STEAL'), sfx.tap)}
-              className="flex-1 py-5 bg-white border-2 border-[#B8E3E9] rounded-2xl text-slate-800 font-black tracking-widest shadow-md active:bg-[#B8E3E9] transition-colors"
+              className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
             >
-              TAKE
+              {/* Shadow Layer */}
+              <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
+              {/* 3D Edge Layer (Pastel Blue) */}
+              <span className="absolute inset-0 w-full h-full rounded-2xl bg-[#B8E3E9]"></span>
+              {/* Front Layer */}
+              <span className="block relative py-5 rounded-2xl bg-white border-2 border-[#B8E3E9] text-slate-800 font-black tracking-widest -translate-y-[4px] transition-transform duration-300 group-active:-translate-y-[2px] group-active:duration-[34ms]">
+                TAKE
+              </span>
             </button>
+
+            {/* UIVERSE 3D 'PASS' BUTTON */}
             <button 
               onClick={() => handleAction(() => makeChoice('LEAVE'), sfx.tap)}
-              className="flex-1 py-5 bg-white border-2 border-[#B8E3E9] rounded-2xl text-slate-800 font-black tracking-widest shadow-md active:bg-[#B8E3E9] transition-colors"
+              className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
             >
-              PASS
+               {/* Shadow Layer */}
+              <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
+              {/* 3D Edge Layer (Pastel Blue) */}
+              <span className="absolute inset-0 w-full h-full rounded-2xl bg-[#B8E3E9]"></span>
+              {/* Front Layer */}
+              <span className="block relative py-5 rounded-2xl bg-white border-2 border-[#B8E3E9] text-slate-800 font-black tracking-widest -translate-y-[4px] transition-transform duration-300 group-active:-translate-y-[2px] group-active:duration-[34ms]">
+                PASS
+              </span>
             </button>
+
           </div>
         </div>
       )}
