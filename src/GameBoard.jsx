@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from './store';
 import { sfx } from './sfx';
 
-// Background Animations & New Neon Rule Card CSS
+// Background, Stars, Meteors, FAQ Button, Neon Card & Shine Text CSS
 const MidnightSky = () => (
   <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ backgroundColor: '#050505' }}>
     <style>{`
+      /* Stars & Meteors */
       .stars { position: absolute; inset: 0; background-repeat: repeat; pointer-events: none; }
       .stars-1 {
         background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent), radial-gradient(1px 1px at 30% 20%, #fff, transparent), radial-gradient(1px 1px at 50% 50%, #fff, transparent), radial-gradient(1px 1px at 70% 30%, #fff, transparent), radial-gradient(1px 1px at 90% 10%, #fff, transparent);
@@ -44,21 +45,20 @@ const MidnightSky = () => (
       }
       .animate-jello-vertical { animation: jello-vertical 0.7s both; }
 
-      /* Pravins01 Neon Card CSS (Adjusted for Rule Text) */
+      /* Neon Rule Card CSS (Scaled up to fit 4 rules) */
       .neon-card {
         position: relative;
-        width: 280px;
+        width: 300px;
         height: 380px;
         background-color: #000;
         display: flex;
         flex-direction: column;
         justify-content: center;
         padding: 24px;
-        gap: 14px;
+        gap: 16px;
         border-radius: 8px;
-        color: white;
-        text-align: left;
         cursor: pointer;
+        color: white;
       }
       .neon-card::before {
         content: '';
@@ -66,7 +66,7 @@ const MidnightSky = () => (
         inset: 0;
         left: -5px;
         margin: auto;
-        width: 290px;
+        width: 310px;
         height: 390px;
         border-radius: 10px;
         background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% );
@@ -84,37 +84,38 @@ const MidnightSky = () => (
         filter: blur(20px);
       }
       .neon-heading {
-        font-size: 22px;
+        font-size: 24px;
         text-transform: uppercase;
-        font-weight: 900;
-        text-align: center;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-        color: #fff;
-      }
-      .rule-block {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-      .rule-title {
+        font-weight: 800;
         color: #e81cff;
-        font-weight: 700;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 10px;
       }
-      .rule-desc {
-        font-size: 11px;
-        color: #ccc;
+      .neon-card p:not(.neon-heading) {
+        font-size: 14px;
         line-height: 1.4;
+        color: #ddd;
       }
-      /* Hover/Tap effect to trigger the rotating border */
       .neon-card:hover::after, .neon-card:active::after {
         filter: blur(30px);
       }
       .neon-card:hover::before, .neon-card:active::before {
-        transform: rotate(-90deg) scaleX(1.35) scaleY(0.74);
+        transform: rotate(-90deg) scaleX(1.34) scaleY(0.77);
+      }
+
+      /* Shine Text CSS for Lobby Title */
+      .shine-text {
+        color: rgba(255, 255, 255, 0.3);
+        background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat;
+        background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%);
+        -webkit-background-clip: text;
+        -webkit-background-size: 50px;
+        -webkit-animation: zezzz 5s infinite;
+      }
+      @-webkit-keyframes zezzz {
+        0%, 10% { background-position: -200px; }
+        20% { background-position: top left; }
+        100% { background-position: 200px; }
       }
     `}</style>
     <div className="stars stars-1"></div>
@@ -178,7 +179,7 @@ export default function GameBoard() {
   const [isHoldingCard, setIsHoldingCard] = useState(false);
   const [hasPeeked, setHasPeeked] = useState(false);
   
-  // Rule Modal State
+  // Rule Modal Controls
   const [showRules, setShowRules] = useState(false);
 
   useEffect(() => {
@@ -221,37 +222,21 @@ export default function GameBoard() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-[#FAF9F6] font-sans text-slate-800 select-none overflow-x-hidden w-full">
       
-      {/* --- NEON CARD RULE MODAL --- */}
+      {/* --- NEON RULE CARD OVERLAY --- */}
       {showRules && (
         <div 
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
           onClick={() => handleAction(() => setShowRules(false))} 
         >
-          {/* Card container stops click propagation */}
+          {/* Stop propagation so clicking the card itself doesn't close it */}
           <div className="neon-card" onClick={(e) => e.stopPropagation()}>
-            <p className="neon-heading">How To Play</p>
-            
-            <div className="rule-block">
-              <p className="rule-title">1. The Peek</p>
-              <p className="rule-desc">Secretly hold the card to view it. It will either be SAFE or ELIMINATE.</p>
-            </div>
-
-            <div className="rule-block">
-              <p className="rule-title">2. Poker Face</p>
-              <p className="rule-desc">Keep a straight face, hide your reaction, and pass the phone.</p>
-            </div>
-
-            <div className="rule-block">
-              <p className="rule-title">3. Take or Pass</p>
-              <p className="rule-desc">The Challenger reads your face and decides to TAKE or PASS the card.</p>
-            </div>
-
-            <div className="rule-block">
-              <p className="rule-title">4. Elimination</p>
-              <p className="rule-desc">Whoever is holding the ELIMINATE card when it flips is out!</p>
-            </div>
+            <p className="neon-heading">How to Play</p>
+            <p><strong>1. PEEK:</strong> Secretly check your card. It's either SAFE or ELIMINATE.</p>
+            <p><strong>2. FACE:</strong> Keep a straight poker face and hand the phone over.</p>
+            <p><strong>3. FATE:</strong> The Challenger must read your face and choose to TAKE or PASS.</p>
+            <p><strong>4. OUT:</strong> Whoever ends up holding the ELIMINATE card loses!</p>
           </div>
-          <p className="text-center text-white/50 text-xs mt-8 tracking-widest uppercase">Tap background to close</p>
+          <p className="text-center text-white/50 text-xs mt-10 tracking-widest uppercase">Tap background to close</p>
         </div>
       )}
 
@@ -261,26 +246,30 @@ export default function GameBoard() {
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
         <>
-          {/* FAQ BUTTON - FIXED TOP LEFT & SMALLER (32x32) */}
+          {/* UIVERSE FAQ BUTTON - FIXED TOP LEFT & SMALLER (32x32) */}
           <button 
             onClick={() => handleAction(() => setShowRules(true))}
-            className="group fixed top-6 left-6 w-[32px] h-[32px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.15)] z-40"
+            className="group fixed top-6 left-6 w-[32px] h-[32px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_10px_10px_rgba(0,0,0,0.15)] z-40"
             style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="h-[1em] fill-white group-hover:animate-jello-vertical">
               <path d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path>
             </svg>
             <span 
-              className="absolute top-[-20px] opacity-0 group-hover:top-[-35px] group-hover:opacity-100 transition-all duration-300 text-white px-[8px] py-[4px] rounded-[5px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-[9px] font-bold"
+              className="absolute top-[-20px] opacity-0 group-hover:top-[-40px] group-hover:opacity-100 transition-all duration-300 text-white px-[8px] py-[4px] rounded-[4px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-[10px] font-bold"
               style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
             >
               FAQ
-              <span className="absolute -bottom-[4px] w-[6px] h-[6px] bg-[#ff2525] rotate-45 z-[-1]"></span>
+              <span className="absolute -bottom-[4px] w-[8px] h-[8px] bg-[#ff2525] rotate-45 z-[-1]"></span>
             </span>
           </button>
 
           <div className="relative z-10 flex flex-col items-center w-full max-w-sm animate-fade-in py-8 mt-4">
-            <h1 className="text-3xl font-black tracking-[0.2em] mb-8 uppercase text-white drop-shadow-lg">The Deck</h1>
+            
+            {/* LOBBY TITLE - NOW WITH UIVERSE SHINE EFFECT */}
+            <h1 className="shine-text text-4xl font-black tracking-[0.2em] mb-8 uppercase drop-shadow-lg text-center">
+              The Deck
+            </h1>
             
             {availableRecentNames.length > 0 && (
               <div className="w-full mb-6">
