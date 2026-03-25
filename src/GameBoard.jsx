@@ -142,23 +142,27 @@ export default function GameBoard() {
             ))}
           </div>
 
-          {/* NEW UIVERSE ANIMATED BUTTON (MOBILE OPTIMIZED) */}
+          {/* EXACT UIVERSE NEON BUTTON */}
           <button 
             onClick={() => handleAction(startGame)}
             disabled={players.length < 2}
-            className={`relative w-full py-5 rounded-2xl font-black text-lg tracking-[0.2em] shadow-xl overflow-hidden transition-all duration-500 ${
+            className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
               players.length < 2 
-                ? 'bg-slate-800 text-white opacity-30 pointer-events-none' 
-                : 'bg-slate-800 text-white active:scale-[0.97]'
+                ? 'bg-slate-200 text-slate-400 opacity-50 pointer-events-none' 
+                : 'bg-white text-slate-900 active:scale-[0.97]'
             }`}
           >
-            {/* The Spinning Glow Effect (Automatically turns on when 2 players are added) */}
-            <div className={`absolute inset-0 flex items-center justify-center pointer-events-none z-0 transition-opacity duration-700 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
-              <div className="w-[15rem] h-[15rem] bg-gradient-to-r from-[#B8E3E9] via-slate-400 to-[#7BB2BB] rounded-full blur-[20px] opacity-50 animate-[spin_3s_linear_infinite]"></div>
+            {/* The True Uiverse Neon Glow */}
+            <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
+              <div 
+                className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
+                style={{
+                  background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)'
+                }}
+              ></div>
             </div>
 
-            {/* Button Text */}
-            <span className="relative z-10 drop-shadow-md">START MATCH</span>
+            <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
           </button>
 
         </div>
