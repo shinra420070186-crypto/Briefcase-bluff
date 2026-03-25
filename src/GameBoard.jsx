@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from './store';
 import { sfx } from './sfx';
 
-// UPDATED: 50% Zoomed Out Midnight Sky
+// Background & CSS Animations (Stars, Meteor, Jello, and Accordion)
 const MidnightSky = () => (
   <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ backgroundColor: '#050505' }}>
     <style>{`
@@ -31,6 +31,89 @@ const MidnightSky = () => (
       
       @keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
       @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-35deg); opacity: 0; } 5% { opacity: 1; } 15% { transform: translateX(-1500px) translateY(1000px) rotate(-35deg); opacity: 0; } 100% { transform: translateX(-1500px) translateY(1000px) rotate(-35deg); opacity: 0; } }
+      
+      /* FAQ Button Jello Effect */
+      @keyframes jello-vertical {
+        0% { transform: scale3d(1, 1, 1); }
+        30% { transform: scale3d(0.75, 1.25, 1); }
+        40% { transform: scale3d(1.25, 0.75, 1); }
+        50% { transform: scale3d(0.85, 1.15, 1); }
+        65% { transform: scale3d(1.05, 0.95, 1); }
+        75% { transform: scale3d(0.95, 1.05, 1); }
+        100% { transform: scale3d(1, 1, 1); }
+      }
+      .animate-jello-vertical { animation: jello-vertical 0.7s both; }
+
+      /* Uiverse Accordion Rule Book Styles */
+      .rule-card {
+        width: 100%;
+        max-width: 340px;
+        height: 380px;
+        border-radius: 12px;
+        background: #212121;
+        display: flex;
+        gap: 5px;
+        padding: 0.5em;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      }
+      .rule-item {
+        height: 100%;
+        flex: 1;
+        overflow: hidden;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        background: #212121;
+        border: 1px solid #ff5a91;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      .rule-item.active {
+        flex: 5;
+        background: #2a2a2a;
+      }
+      .rule-heading {
+        min-width: 14em;
+        text-align: center;
+        transform: rotate(-90deg);
+        transition: all 0.5s;
+        text-transform: uppercase;
+        color: #ff568e;
+        letter-spacing: 0.1em;
+        font-weight: 900;
+        font-size: 0.9rem;
+      }
+      .rule-item.active .rule-heading {
+        transform: rotate(0);
+        min-width: auto;
+        padding-top: 20px;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 86, 142, 0.8);
+      }
+      .rule-content {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease-in-out;
+        display: none;
+      }
+      .rule-item.active .rule-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+        padding: 0 15px 20px 15px;
+        color: #ddd;
+        text-align: center;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
     `}</style>
     <div className="stars stars-1"></div>
     <div className="stars stars-2"></div>
@@ -92,6 +175,11 @@ export default function GameBoard() {
   const [newPlayerName, setNewPlayerName] = useState('');
   const [isHoldingCard, setIsHoldingCard] = useState(false);
   const [hasPeeked, setHasPeeked] = useState(false);
+  
+  // Controls the overall Rules Modal overlay
+  const [showRules, setShowRules] = useState(false);
+  // Controls which accordion tab is expanded (defaults to the first one: 0)
+  const [activeRuleTab, setActiveRuleTab] = useState(0);
 
   useEffect(() => {
     if (phase === 'peek') setHasPeeked(false);
@@ -133,69 +221,160 @@ export default function GameBoard() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-[#FAF9F6] font-sans text-slate-800 select-none overflow-x-hidden w-full">
       
+      {/* --- INTERACTIVE RULE ACCORDION OVERLAY --- */}
+      {showRules && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+          onClick={() => handleAction(() => setShowRules(false))} // Clicking dark background closes the modal
+        >
+          {/* We use stopPropagation so clicking INSIDE the rule book doesn't close it */}
+          <div className="relative" onClick={(e) => e.stopPropagation()}>
+            <div className="rule-card">
+              
+              {/* Tab 1: The Peek */}
+              <div 
+                className={`rule-item ${activeRuleTab === 0 ? 'active' : ''}`} 
+                onClick={() => handleAction(() => setActiveRuleTab(0))}
+              >
+                <span className="rule-heading">1. THE PEEK</span>
+                <div className="rule-content">
+                  <span className="text-3xl mb-2">🤫</span>
+                  <p>Secretly press and hold to check your card. You will draw either a green <strong>SAFE</strong> or a red <strong className="text-rose-500">ELIMINATE</strong>.</p>
+                </div>
+              </div>
+
+              {/* Tab 2: Poker Face */}
+              <div 
+                className={`rule-item ${activeRuleTab === 1 ? 'active' : ''}`} 
+                onClick={() => handleAction(() => setActiveRuleTab(1))}
+              >
+                <span className="rule-heading">2. POKER FACE</span>
+                <div className="rule-content">
+                  <span className="text-3xl mb-2">🗿</span>
+                  <p>Do not react! Keep a completely straight face, bluff if you need to, and hand the phone to the Challenger.</p>
+                </div>
+              </div>
+
+              {/* Tab 3: Take or Pass */}
+              <div 
+                className={`rule-item ${activeRuleTab === 2 ? 'active' : ''}`} 
+                onClick={() => handleAction(() => setActiveRuleTab(2))}
+              >
+                <span className="rule-heading">3. FATE</span>
+                <div className="rule-content">
+                  <span className="text-3xl mb-2">🎯</span>
+                  <p>The Challenger must read your face and make a blind choice: <strong>TAKE</strong> the card from you, or <strong>PASS</strong> it back.</p>
+                </div>
+              </div>
+
+              {/* Tab 4: Elimination */}
+              <div 
+                className={`rule-item ${activeRuleTab === 3 ? 'active' : ''}`} 
+                onClick={() => handleAction(() => setActiveRuleTab(3))}
+              >
+                <span className="rule-heading">4. OUT!</span>
+                <div className="rule-content">
+                  <span className="text-3xl mb-2">☠️</span>
+                  <p>Once the choice is made, the card flips! Whoever ends up holding the <strong className="text-rose-500">ELIMINATE</strong> card is immediately OUT!</p>
+                </div>
+              </div>
+
+            </div>
+            
+            {/* Optional visible close text under the accordion */}
+            <p className="text-center text-white/50 text-xs mt-4 tracking-widest uppercase">Tap anywhere outside to close</p>
+          </div>
+        </div>
+      )}
+
+      {/* --- LOBBY BACKGROUND --- */}
       {phase === 'lobby' && <MidnightSky />}
       
-      {/* --- LOBBY --- */}
+      {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
-        <div className="relative z-10 flex flex-col items-center w-full max-w-sm animate-fade-in py-8">
-          <h1 className="text-3xl font-black tracking-[0.2em] mb-8 uppercase text-white drop-shadow-lg">The Deck</h1>
-          
-          {availableRecentNames.length > 0 && (
-            <div className="w-full mb-6">
-              <p className="text-[10px] text-slate-300 uppercase tracking-widest mb-3 pl-2">Recent Players</p>
-              <div className="flex flex-wrap gap-2">
-                {availableRecentNames.slice(0, 6).map(name => (
-                  <button 
-                    key={name} 
-                    onClick={() => handleAction(() => addPlayer(name), sfx.addPlayer)} 
-                    className="px-4 py-2 bg-white border border-[#B8E3E9] rounded-full text-slate-600 text-xs font-bold tracking-wider active:bg-[#B8E3E9] transition-colors shadow-sm"
-                  >
-                    + {name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="w-full flex gap-2 mb-8">
-            <input 
-              type="text" 
-              value={newPlayerName}
-              onChange={(e) => setNewPlayerName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
-              placeholder="Enter Name"
-              className="flex-1 p-4 bg-white border border-slate-200 rounded-2xl text-slate-800 outline-none focus:border-[#B8E3E9] transition-colors font-bold shadow-sm"
-            />
-            <button onClick={handleAddPlayer} className="px-6 bg-[#B8E3E9] text-slate-900 rounded-2xl font-black text-2xl active:scale-95 transition-transform shadow-md">+</button>
-          </div>
-          
-          <div className="w-full space-y-2 mb-10">
-            {players.map((p) => (
-              <div key={p.id} className="flex justify-between items-center py-4 px-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                <span className="font-bold tracking-widest text-slate-700">{p.name}</span>
-                <button onClick={() => handleAction(() => removePlayer(p.id), sfx.removePlayer)} className="text-rose-400 font-bold active:scale-90 flex items-center justify-center w-6 h-6">✕</button>
-              </div>
-            ))}
-          </div>
-
+        <>
+          {/* UIVERSE FAQ BUTTON - Top Right */}
           <button 
-            onClick={() => handleAction(startGame)}
-            disabled={players.length < 2}
-            className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
-              players.length < 2 
-                ? 'bg-slate-200 text-slate-400 opacity-50 pointer-events-none' 
-                : 'bg-white text-slate-900 active:scale-[0.97]'
-            }`}
+            onClick={() => handleAction(() => { setShowRules(true); setActiveRuleTab(0); })}
+            className="group absolute top-6 right-6 w-[50px] h-[50px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_10px_10px_rgba(0,0,0,0.15)] z-20"
+            style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
           >
-            <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
-              <div 
-                className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
-                style={{ background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)' }}
-              ></div>
-            </div>
-            <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 320 512"
+              className="h-[1.5em] fill-white group-hover:animate-jello-vertical"
+            >
+              <path d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path>
+            </svg>
+            <span 
+              className="absolute top-[-20px] opacity-0 group-hover:top-[-45px] group-hover:opacity-100 transition-all duration-300 text-white px-[10px] py-[5px] rounded-[5px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-xs font-bold"
+              style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
+            >
+              FAQ
+              <span className="absolute -bottom-[4px] w-[10px] h-[10px] bg-[#ff2525] rotate-45 z-[-1]"></span>
+            </span>
           </button>
-        </div>
+
+          <div className="relative z-10 flex flex-col items-center w-full max-w-sm animate-fade-in py-8 mt-4">
+            <h1 className="text-3xl font-black tracking-[0.2em] mb-8 uppercase text-white drop-shadow-lg">The Deck</h1>
+            
+            {availableRecentNames.length > 0 && (
+              <div className="w-full mb-6">
+                <p className="text-[10px] text-slate-300 uppercase tracking-widest mb-3 pl-2">Recent Players</p>
+                <div className="flex flex-wrap gap-2">
+                  {availableRecentNames.slice(0, 6).map(name => (
+                    <button 
+                      key={name} 
+                      onClick={() => handleAction(() => addPlayer(name), sfx.addPlayer)} 
+                      className="px-4 py-2 bg-white border border-[#B8E3E9] rounded-full text-slate-600 text-xs font-bold tracking-wider active:bg-[#B8E3E9] transition-colors shadow-sm"
+                    >
+                      + {name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="w-full flex gap-2 mb-8">
+              <input 
+                type="text" 
+                value={newPlayerName}
+                onChange={(e) => setNewPlayerName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
+                placeholder="Enter Name"
+                className="flex-1 p-4 bg-white border border-slate-200 rounded-2xl text-slate-800 outline-none focus:border-[#B8E3E9] transition-colors font-bold shadow-sm"
+              />
+              <button onClick={handleAddPlayer} className="px-6 bg-[#B8E3E9] text-slate-900 rounded-2xl font-black text-2xl active:scale-95 transition-transform shadow-md">+</button>
+            </div>
+            
+            <div className="w-full space-y-2 mb-10">
+              {players.map((p) => (
+                <div key={p.id} className="flex justify-between items-center py-4 px-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                  <span className="font-bold tracking-widest text-slate-700">{p.name}</span>
+                  <button onClick={() => handleAction(() => removePlayer(p.id), sfx.removePlayer)} className="text-rose-400 font-bold active:scale-90 flex items-center justify-center w-6 h-6">✕</button>
+                </div>
+              ))}
+            </div>
+
+            <button 
+              onClick={() => handleAction(startGame)}
+              disabled={players.length < 2}
+              className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
+                players.length < 2 
+                  ? 'bg-slate-200 text-slate-400 opacity-50 pointer-events-none' 
+                  : 'bg-white text-slate-900 active:scale-[0.97]'
+              }`}
+            >
+              <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
+                <div 
+                  className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
+                  style={{ background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)' }}
+                ></div>
+              </div>
+              <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
+            </button>
+          </div>
+        </>
       )}
 
       {/* --- PEEK PHASE --- */}
@@ -238,79 +417,4 @@ export default function GameBoard() {
               className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
             >
               <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
-              <span className="absolute inset-0 w-full h-full rounded-2xl bg-[#B8E3E9]"></span>
-              <span className="block relative py-5 rounded-2xl bg-white border-2 border-[#B8E3E9] text-slate-800 font-black tracking-widest -translate-y-[4px] transition-transform duration-300 group-active:-translate-y-[2px] group-active:duration-[34ms]">
-                TAKE
-              </span>
-            </button>
-
-            <button 
-              onClick={() => handleAction(() => makeChoice('LEAVE'), sfx.tap)}
-              className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
-            >
-              <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
-              <span className="absolute inset-0 w-full h-full rounded-2xl bg-[#B8E3E9]"></span>
-              <span className="block relative py-5 rounded-2xl bg-white border-2 border-[#B8E3E9] text-slate-800 font-black tracking-widest -translate-y-[4px] transition-transform duration-300 group-active:-translate-y-[2px] group-active:duration-[34ms]">
-                PASS
-              </span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* --- RESOLUTION PHASE --- */}
-      {phase === 'resolution' && roundResult && (
-        <div className="relative z-10 flex flex-col items-center w-full animate-fade-in text-center py-6">
-          <FlipCard isFlipped={true} status={cardStatus} />
-
-          <div className="mt-4 mb-6 w-full max-w-xs bg-white border border-slate-100 shadow-sm rounded-2xl py-5">
-            <h2 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
-            <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Eliminated</p>
-            <div className="h-px w-1/3 bg-slate-100 mx-auto my-3"></div>
-            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">
-              Win Streak: {displayStreak} / {Math.max(initialRoster.length - 1, 2)}
-            </p>
-          </div>
-
-          <button 
-            onClick={() => handleAction(nextRound)}
-            className="w-full max-w-xs py-5 bg-slate-800 text-white rounded-2xl font-black tracking-[0.2em] shadow-xl active:scale-95 transition-transform"
-          >
-            NEXT MATCH
-          </button>
-        </div>
-      )}
-
-      {/* --- GAMEOVER PHASE --- */}
-      {phase === 'gameover' && (
-        <div className="relative z-10 flex flex-col items-center animate-fade-in text-center mt-16 w-full">
-          <button 
-            onClick={() => handleAction(backToLobby)}
-            className="group absolute top-6 right-6 flex items-center justify-center h-10 px-3 bg-white border border-slate-200 shadow-sm rounded-lg text-slate-600 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200"
-          >
-            <svg 
-              className="h-4 w-4 mr-1 transition-transform duration-300 group-active:-translate-x-1" 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 1024 1024" 
-              fill="currentColor"
-            >
-              <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
-            </svg>
-            BACK
-          </button>
-
-          <div className="w-20 h-20 bg-[#B8E3E9] shadow-[0_10px_30px_rgba(184,227,233,0.5)] flex items-center justify-center rounded-full text-3xl mb-6">👑</div>
-          <h2 className="text-4xl font-black text-slate-800 uppercase tracking-widest mb-4">{players[0]?.name}</h2>
-          <p className="text-emerald-500 font-bold tracking-[0.3em] mb-16 uppercase text-xs">Game Champion</p>
-          
-          <button 
-            onClick={() => handleAction(playAgain)}
-            className="px-8 py-4 bg-white border-2 border-slate-200 shadow-md rounded-2xl text-slate-800 font-bold tracking-[0.2em] active:bg-slate-50 transition-colors"
-          >
-            PLAY AGAIN
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+              <span className="absolute inset-0 w-full h-full rounded-2xl bg-[#B
