@@ -3,7 +3,7 @@ import { useGameStore } from './store';
 import { sfx } from './sfx';
 
 // ==============================================
-// 1. NIGHT SKY BACKGROUND
+// 1. NIGHT SKY BACKGROUND (LOBBY ONLY)
 // ==============================================
 const MidnightSky = () => (
   <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ backgroundColor: '#050505' }}>
@@ -32,7 +32,7 @@ const MidnightSky = () => (
 );
 
 // ==============================================
-// 2. MORNING SKY BACKGROUND
+// 2. MORNING SKY BACKGROUND (LOBBY ONLY)
 // ==============================================
 const MorningSky = () => (
   <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, #4A90E2 0%, #FFB75E 100%)' }}>
@@ -57,7 +57,23 @@ const MorningSky = () => (
 );
 
 // ==============================================
-// 3. GLOBAL STYLES (Burger, Rule Cards, Buttons, Magic Card)
+// 3. ACTIVE GAME BACKGROUND (NEW)
+// ==============================================
+const ActiveGameBackground = () => (
+  <div 
+    className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" 
+    style={{ background: 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 50%, #0f3443 100%)' }}
+  >
+    {/* Subtle Dot Grid Overlay to give it a tactical game board feel */}
+    <div 
+      className="absolute inset-0 opacity-10" 
+      style={{ backgroundImage: 'radial-gradient(#ffffff 1.5px, transparent 1.5px)', backgroundSize: '30px 30px' }}
+    ></div>
+  </div>
+);
+
+// ==============================================
+// 4. GLOBAL STYLES (Burger, Rule Cards, Buttons, Magic Card)
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
@@ -136,7 +152,7 @@ const GlobalStyles = () => (
     .next-match-btn:hover { box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78; color: #d6d6d6; transition: 500ms; }
     .next-match-btn:active { box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78; color: #d6d6d6; transition: 100ms; }
 
-    /* Shine Text CSS (THE DECK ANIMATION RESTORED) */
+    /* Shine Text CSS (THE DECK ANIMATION) */
     .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
     @-webkit-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
@@ -182,7 +198,7 @@ const GlobalStyles = () => (
 );
 
 // ==============================================
-// 4. GAME COMPONENTS (NEW MAGIC FLIP CARD)
+// 5. GAME COMPONENTS (MAGIC FLIP CARD)
 // ==============================================
 const FlipCard = ({ isFlipped, status }) => {
   const isSafe = status === 'SAFE';
@@ -321,8 +337,12 @@ export default function GameBoard() {
         </div>
       )}
 
-      {/* --- GLOBAL BACKGROUND (DAY OR NIGHT) --- */}
-      {isDayMode ? <MorningSky /> : <MidnightSky />}
+      {/* --- DYNAMIC BACKGROUND HANDLING --- */}
+      {phase === 'lobby' ? (
+        isDayMode ? <MorningSky /> : <MidnightSky />
+      ) : (
+        <ActiveGameBackground />
+      )}
       
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
@@ -528,11 +548,11 @@ export default function GameBoard() {
         <div className="relative z-10 flex flex-col items-center w-full animate-fade-in text-center py-6">
           <FlipCard isFlipped={true} status={cardStatus} />
 
-          <div className="mt-4 mb-6 w-full max-w-xs bg-white/90 backdrop-blur-sm border border-slate-100 shadow-xl rounded-2xl py-5">
-            <h2 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
+          <div className="mt-4 mb-6 w-full max-w-xs bg-[#181818] border border-slate-700 shadow-xl rounded-2xl py-5">
+            <h2 className="text-3xl font-black text-white uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
             <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Eliminated</p>
-            <div className="h-px w-1/3 bg-slate-200 mx-auto my-3"></div>
-            <p className="text-slate-500 text-[10px] tracking-widest uppercase font-bold">
+            <div className="h-px w-1/3 bg-slate-700 mx-auto my-3"></div>
+            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">
               Win Streak: {displayStreak} / {Math.max(initialRoster.length - 1, 2)}
             </p>
           </div>
@@ -552,7 +572,7 @@ export default function GameBoard() {
           
           <button 
             onClick={() => handleDelayedAction(backToLobby)}
-            className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-white/90 backdrop-blur-sm border border-slate-200 shadow-lg rounded-lg text-slate-700 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
+            className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-black/50 backdrop-blur-sm border border-slate-700 shadow-lg rounded-lg text-slate-300 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
           >
             <svg className="h-4 w-4 mr-1 transition-transform duration-300 group-active:-translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor">
               <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
@@ -560,9 +580,9 @@ export default function GameBoard() {
             BACK
           </button>
 
-          <div className="w-24 h-24 bg-white/20 backdrop-blur-md shadow-[0_10px_40px_rgba(255,255,255,0.4)] flex items-center justify-center rounded-full text-5xl mb-6 border-2 border-white/50">👑</div>
+          <div className="w-24 h-24 bg-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(255,255,255,0.1)] flex items-center justify-center rounded-full text-5xl mb-6 border-2 border-white/20">👑</div>
           <h2 className="text-5xl font-black text-white uppercase tracking-widest mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{players[0]?.name}</h2>
-          <p className="text-white font-black tracking-[0.4em] mb-16 uppercase text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Game Champion</p>
+          <p className="text-yellow-400 font-black tracking-[0.4em] mb-16 uppercase text-sm drop-shadow-md">Game Champion</p>
           
           <button 
             onClick={() => handleDelayedAction(playAgain)}
