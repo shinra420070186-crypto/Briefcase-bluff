@@ -3,7 +3,7 @@ import { useGameStore } from './store';
 import { sfx } from './sfx';
 
 // ==============================================
-// 1. ALL CSS STYLES (STATIC TO PREVENT ANIMATION GLITCHES)
+// 1. ALL CSS STYLES (STATIC TO PREVENT GLITCHES)
 // ==============================================
 const GAME_STYLES = `
   /* Night Sky Elements */
@@ -78,7 +78,7 @@ const GAME_STYLES = `
 
   /* Shine Text Animation (The Deck) */
   .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
-  @-webkit-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
+  @keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
   /* Poda Input */
   .poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; }
@@ -130,16 +130,36 @@ const GAME_STYLES = `
 // ==============================================
 // 2. BACKGROUND COMPONENTS
 // ==============================================
+const MidnightSky = () => (
+  <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ backgroundColor: '#050505' }}>
+    <div className="stars stars-1"></div>
+    <div className="stars stars-2"></div>
+    <div className="stars stars-3"></div>
+    <div className="meteor m1"></div>
+    <div className="meteor m2"></div>
+    <div className="meteor m3"></div>
+    <div className="moon"></div>
+  </div>
+);
 
-// Smooth Cross-Fade Wrapper for the Lobby Skies
+const MorningSky = () => (
+  <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ background: 'linear-gradient(180deg, #4A90E2 0%, #FFB75E 100%)' }}>
+    <div className="motes motes-1"></div>
+    <div className="motes motes-2"></div>
+    <div className="wind w1"></div>
+    <div className="wind w2"></div>
+    <div className="wind w3"></div>
+    <div className="sun"></div>
+  </div>
+);
+
+// THE FIX: This wrapper sits behind the lobby UI and fades between Morning/Night 
+// without destroying the components, fixing the animation glitch.
 const LobbySky = ({ isDayMode }) => (
   <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-    {/* Night Sky - Fades Out in Day Mode */}
     <div className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${isDayMode ? 'opacity-0' : 'opacity-100'}`}>
       <MidnightSky />
     </div>
-    
-    {/* Morning Sky - Fades In in Day Mode */}
     <div className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${isDayMode ? 'opacity-100' : 'opacity-0'}`}>
       <MorningSky />
     </div>
@@ -158,7 +178,6 @@ const PastelGlowBackground = () => (
 const FlipCard = ({ isFlipped, status }) => {
   const isSafe = status === 'SAFE';
 
-  // Dynamic Gradients for the Magic Card Background and Shadow
   const deckGradient = 'linear-gradient(to left, #f7ba2b 0%, #ea5358 100%)';
   const safeGradient = 'linear-gradient(to left, #00b09b, #96c93d)';
   const elimGradient = 'linear-gradient(to left, #ff416c, #ff4b2b)';
@@ -227,14 +246,13 @@ export default function GameBoard() {
     if (actionCallback) actionCallback();
   };
 
-  // Delayed action for button animations
   const handleDelayedAction = (actionCallback, soundEffect = sfx.tap) => {
     sfx.init();
     if (soundEffect) soundEffect.bind(sfx)();
     if (actionCallback) {
       setTimeout(() => {
         actionCallback();
-      }, 200); // 200ms delay allowing CSS :active states to show
+      }, 200); 
     }
   };
 
@@ -266,10 +284,10 @@ export default function GameBoard() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-transparent font-sans text-slate-800 select-none overflow-x-hidden w-full">
       
-      {/* GLOBAL CSS INJECTION (STATIC) */}
+      {/* STATIC STYLESHEET TO PREVENT GLITCHES */}
       <style dangerouslySetInnerHTML={{ __html: GAME_STYLES }} />
 
-      {/* --- RULE CARDS MODAL OVERLAY --- */}
+      {/* --- KAMEHAME-HA RULE CARDS OVERLAY --- */}
       {showRules && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
           <div className="cards mt-12">
@@ -303,7 +321,6 @@ export default function GameBoard() {
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
         <>
-          {/* BURGER / CROSS MENU (FIXED TOP LEFT) */}
           <div className="fixed top-6 left-6 z-[60]">
             <label className="burger" htmlFor="burger">
               <input 
@@ -318,7 +335,6 @@ export default function GameBoard() {
             </label>
           </div>
 
-          {/* DAY/NIGHT TOGGLE SWITCH (FIXED TOP RIGHT) */}
           <div className="fixed top-6 right-6 z-40 shadow-xl rounded-full">
             <label className="theme-switch" htmlFor="theme-switch-toggle">
               <input 
