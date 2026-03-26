@@ -83,10 +83,6 @@ const MorningSky = () => (
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
-    /* FAQ Button Jello Effect */
-    @keyframes jello-vertical { 0% { transform: scale3d(1, 1, 1); } 30% { transform: scale3d(0.75, 1.25, 1); } 40% { transform: scale3d(1.25, 0.75, 1); } 50% { transform: scale3d(0.85, 1.15, 1); } 65% { transform: scale3d(1.05, 0.95, 1); } 75% { transform: scale3d(0.95, 1.05, 1); } 100% { transform: scale3d(1, 1, 1); } }
-    .animate-jello-vertical { animation: jello-vertical 0.7s both; }
-
     /* Neon Rule Card CSS */
     .neon-card { position: relative; width: 300px; height: 380px; background-color: #000; display: flex; flex-direction: column; justify-content: center; padding: 24px; gap: 16px; border-radius: 8px; cursor: pointer; color: white; }
     .neon-card::before { content: ''; position: absolute; inset: 0; left: -5px; margin: auto; width: 310px; height: 390px; border-radius: 10px; background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% ); z-index: -10; pointer-events: none; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -180,161 +176,67 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
 
     /* ====================================================
-       WENDELL47 BUTTON CSS (Hide & Proceed Only)
+       CEVOROB BURGER MENU CSS (Replaces FAQ Button)
        ==================================================== */
-    .wendell-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px 30px;
-      border: 0;
+    .burger {
       position: relative;
-      overflow: hidden;
-      border-radius: 10rem;
-      transition: all 0.02s;
-      font-weight: bold;
-      cursor: pointer;
-      color: rgb(37, 37, 37);
-      background-color: #ffffff;
-      z-index: 0;
-      box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
-      width: 100%;
-      max-width: 320px;
-      margin-top: 1rem;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    .wendell-btn:hover {
-      background: rgb(193, 228, 248);
-      color: rgb(33, 0, 85);
-    }
-    
-    .wendell-btn:active {
-      transform: scale(0.97);
-    }
-    
-    .wendell-hoverEffect {
-      position: absolute;
-      bottom: 0;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    .wendell-hoverEffect div {
-      background: rgb(222, 0, 75);
-      background: linear-gradient(
-        90deg,
-        rgba(222, 0, 75, 1) 0%,
-        rgba(191, 70, 255, 1) 49%,
-        rgba(0, 212, 255, 1) 100%
-      );
-      border-radius: 40rem;
-      /* 25rem fixes the edge-to-edge cutoff glitch on wide buttons */
-      width: 25rem; 
-      height: 25rem; 
-      transition: 0.4s;
-      filter: blur(20px);
-      animation: wendell-effect infinite 3s linear;
-      opacity: 0.5;
-    }
-    
-    .wendell-btn:hover .wendell-hoverEffect div {
-      width: 21rem;
-      height: 21rem;
-    }
-    
-    @keyframes wendell-effect {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .wendell-text {
-      position: relative;
-      z-index: 2;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    /* ====================================================
-       STEALTHWORM BUTTON CSS (Start Match Only)
-       ==================================================== */
-    .stealth-btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      overflow: hidden;
-      height: 4rem;
-      background-size: 300% 300%;
-      cursor: pointer;
-      backdrop-filter: blur(1rem);
-      border-radius: 5rem;
-      transition: 0.5s;
-      animation: stealth_gradient_301 5s ease infinite;
-      border: double 4px transparent;
-      background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #fe53bb 45%, #8f51ea 67%, #0044ff 87%);
-      background-origin: border-box;
-      background-clip: content-box, border-box;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
-    }
-    .stealth-btn:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: grayscale(1);
-    }
-    .stealth-container-stars {
-      position: absolute;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      transition: 0.5s;
-      backdrop-filter: blur(1rem);
-      border-radius: 5rem;
-    }
-    .stealth-strong {
-      z-index: 2;
-      font-size: 1.125rem;
-      font-weight: 900;
-      letter-spacing: 0.2em;
-      color: #ffffff;
-      text-shadow: 0 0 4px white;
-    }
-    .stealth-glow {
-      position: absolute;
-      display: flex;
-      width: 12rem;
-    }
-    .stealth-circle {
-      width: 100%;
+      width: 40px;
       height: 30px;
-      filter: blur(2rem);
-      animation: stealth_pulse_3011 4s infinite;
-      z-index: -1;
+      background: transparent;
+      cursor: pointer;
+      display: block;
     }
-    .stealth-circle:nth-of-type(1) { background: rgba(254, 83, 186, 0.636); }
-    .stealth-circle:nth-of-type(2) { background: rgba(142, 81, 234, 0.704); }
-    .stealth-btn:hover .stealth-container-stars { z-index: 1; background-color: #212121; }
-    .stealth-btn:hover { transform: scale(1.05); }
-    .stealth-btn:active { border: double 4px #fe53bb; background-origin: border-box; background-clip: content-box, border-box; animation: none; transform: scale(0.95); }
-    .stealth-btn:active .stealth-circle { background: #fe53bb; }
-    .stealth-stars { position: relative; background: transparent; width: 200rem; height: 200rem; }
-    .stealth-stars::after { content: ""; position: absolute; top: -10rem; left: -100rem; width: 100%; height: 100%; animation: stealth_animStarRotate 90s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; }
-    .stealth-stars::before { content: ""; position: absolute; top: 0; left: -50%; width: 170%; height: 500%; animation: stealth_animStar 60s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; opacity: 0.5; }
-    
-    @keyframes stealth_animStar { from { transform: translateY(0); } to { transform: translateY(-135rem); } }
-    @keyframes stealth_animStarRotate { from { transform: rotate(360deg); } to { transform: rotate(0); } }
-    @keyframes stealth_gradient_301 { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes stealth_pulse_3011 { 0% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); } 100% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); } }
+
+    .burger input {
+      display: none;
+    }
+
+    .burger span {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: white; /* Changed to white so it's visible on dark backgrounds */
+      border-radius: 9px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease-in-out;
+    }
+
+    .burger span:nth-of-type(1) {
+      top: 0px;
+      transform-origin: left center;
+    }
+
+    .burger span:nth-of-type(2) {
+      top: 50%;
+      transform: translateY(-50%);
+      transform-origin: left center;
+    }
+
+    .burger span:nth-of-type(3) {
+      top: 100%;
+      transform-origin: left center;
+      transform: translateY(-100%);
+    }
+
+    .burger input:checked ~ span:nth-of-type(1) {
+      transform: rotate(45deg);
+      top: 0px;
+      left: 5px;
+    }
+
+    .burger input:checked ~ span:nth-of-type(2) {
+      width: 0%;
+      opacity: 0;
+    }
+
+    .burger input:checked ~ span:nth-of-type(3) {
+      transform: rotate(-45deg);
+      top: 28px;
+      left: 5px;
+    }
   `}</style>
 );
 
@@ -470,23 +372,20 @@ export default function GameBoard() {
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
         <>
-          {/* FAQ BUTTON - TOP LEFT */}
-          <button 
-            onClick={() => handleAction(() => setShowRules(true))}
-            className="group fixed top-6 left-6 w-[32px] h-[32px] rounded-full border-none flex items-center justify-center cursor-pointer shadow-[0px_10px_10px_rgba(0,0,0,0.15)] z-40"
-            style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="h-[1em] fill-white group-hover:animate-jello-vertical">
-              <path d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path>
-            </svg>
-            <span 
-              className="absolute top-[-20px] opacity-0 group-hover:top-[-40px] group-hover:opacity-100 transition-all duration-300 text-white px-[8px] py-[4px] rounded-[4px] flex items-center justify-center pointer-events-none tracking-[0.5px] text-[10px] font-bold"
-              style={{ backgroundImage: 'linear-gradient(147deg, #ffe53b 0%, #ff2525 74%)' }}
-            >
-              FAQ
-              <span className="absolute -bottom-[4px] w-[8px] h-[8px] bg-[#ff2525] rotate-45 z-[-1]"></span>
-            </span>
-          </button>
+          {/* CEVOROB BURGER BUTTON - REPLACED FAQ BUTTON */}
+          <div className="fixed top-6 left-6 z-40">
+            <label className="burger" htmlFor="burger">
+              <input 
+                type="checkbox" 
+                id="burger" 
+                checked={showRules} 
+                onChange={() => handleAction(() => setShowRules(!showRules))} 
+              />
+              <span></span>
+              <span></span>
+              <span></span>
+            </label>
+          </div>
 
           {/* DAY/NIGHT TOGGLE SWITCH - TOP RIGHT */}
           <div className="fixed top-6 right-6 z-40 shadow-xl rounded-full">
@@ -597,20 +496,23 @@ export default function GameBoard() {
               ))}
             </div>
 
-            {/* --- STEALTHWORM START MATCH BUTTON --- */}
+            {/* Added 250ms delay to Start Match */}
             <button 
               onClick={() => handleDelayedAction(startGame)}
               disabled={players.length < 2}
-              className="stealth-btn"
+              className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
+                players.length < 2 
+                  ? 'bg-[#222] text-slate-500 opacity-50 pointer-events-none' 
+                  : 'bg-white text-slate-900 active:scale-[0.97]'
+              }`}
             >
-              <strong className="stealth-strong">START MATCH</strong>
-              <div className="stealth-container-stars">
-                <div className="stealth-stars"></div>
+              <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
+                <div 
+                  className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
+                  style={{ background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)' }}
+                ></div>
               </div>
-              <div className="stealth-glow">
-                <div className="stealth-circle"></div>
-                <div className="stealth-circle"></div>
-              </div>
+              <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
             </button>
           </div>
         </>
@@ -630,14 +532,12 @@ export default function GameBoard() {
             <FlipCard isFlipped={isHoldingCard} status={cardStatus} />
           </div>
 
-          {/* EXACT WENDELL47 BUTTON - APPLIED ONLY TO HIDE & PROCEED */}
           <button 
             onClick={() => handleDelayedAction(goToChoicePhase)}
             disabled={!hasPeeked || isHoldingCard}
-            className={`wendell-btn wendell-btn-wide mt-4 transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`w-full max-w-xs mt-4 py-5 rounded-2xl bg-[#B8E3E9] text-slate-900 font-black tracking-[0.2em] shadow-lg transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100 active:scale-95'}`}
           >
-            <span className="wendell-text">HIDE & PROCEED</span>
-            <div className="wendell-hoverEffect"><div></div></div>
+            HIDE & PROCEED
           </button>
         </div>
       )}
