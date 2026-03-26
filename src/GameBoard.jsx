@@ -285,7 +285,7 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom: -4.062em; }
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
 
-    /* CEVOROB BURGER MENU CSS */
+    /* CEVOROB BURGER MENU CSS (Scaled to 50% size) */
     .burger {
       position: relative;
       width: 40px;
@@ -473,7 +473,7 @@ const FlipCard = ({ isFlipped, status }) => {
       >
         {/* FRONT OF CARD (Dormant State) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full [backface-visibility:hidden]">
-          <div className="tiago-card bg-[#222]">
+          <div className="tiago-card" style={{ background: 'linear-gradient(163deg, #444 0%, #222 100%)' }}>
             <div className="tiago-card2">
               <p className="text-2xl font-black tracking-widest m-0 uppercase text-slate-500">THE DECK</p>
               <p className="mt-2 font-bold tracking-[0.2em] text-[10px] uppercase text-slate-600">
