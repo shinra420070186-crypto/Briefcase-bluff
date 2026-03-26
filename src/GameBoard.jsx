@@ -57,23 +57,52 @@ const MorningSky = () => (
 );
 
 // ==============================================
-// 3. ACTIVE GAME BACKGROUND (NEW)
+// 3. NEW PASTEL GLOW BACKGROUND (ACTIVE GAME)
 // ==============================================
-const ActiveGameBackground = () => (
-  <div 
-    className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" 
-    style={{ background: 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 50%, #0f3443 100%)' }}
-  >
-    {/* Subtle Dot Grid Overlay to give it a tactical game board feel */}
-    <div 
-      className="absolute inset-0 opacity-10" 
-      style={{ backgroundImage: 'radial-gradient(#ffffff 1.5px, transparent 1.5px)', backgroundSize: '30px 30px' }}
-    ></div>
+const PastelGlowBackground = () => (
+  <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, #ffe8f3, #d9f3ff)' }}>
+    <style>{`
+      .pastel-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.1));
+      }
+      .pastel-container::before, .pastel-container::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, #ff9aa2, #ffb7b2, #ffdac1, #e2f0cb, #a2e4ff, #c9afff, #ffb7b2, #ff9aa2);
+        transform: translate(-50%, -50%);
+        animation: rotate-pastel 8s linear infinite;
+        filter: blur(50px);
+        opacity: 0.8;
+      }
+      .pastel-container::after {
+        width: 180%;
+        height: 180%;
+        animation: rotate-pastel-reverse 10s linear infinite;
+        opacity: 0.6;
+      }
+      @keyframes rotate-pastel {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+      @keyframes rotate-pastel-reverse {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(-360deg); }
+      }
+    `}</style>
+    <div className="pastel-container"></div>
   </div>
 );
 
 // ==============================================
-// 4. GLOBAL STYLES (Burger, Rule Cards, Buttons, Magic Card)
+// 4. GLOBAL STYLES 
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
@@ -138,21 +167,52 @@ const GlobalStyles = () => (
       overflow: hidden;
       border-radius: .7rem;
     }
-    .magic-card:hover::after {
-      opacity: 0;
+    .magic-card:hover::after { opacity: 0; }
+
+    /* UNIFIED GLOWING NEON BUTTONS */
+    .neon-btn {
+      cursor: pointer;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border-radius: 1rem;
+      border: none;
+      position: relative;
+      background: #100720;
+      transition: 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+      z-index: 10;
     }
+    .neon-btn::after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
+      filter: blur(15px);
+      z-index: -1;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 1rem;
+    }
+    .neon-btn:active {
+      transform: scale(0.9) rotate(3deg);
+      background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
+      transition: 0.2s;
+    }
+    .neon-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    /* Button Size Modifiers */
+    .neon-btn-half { width: 140px; height: 62px; }
+    .neon-btn-wide { width: 100%; max-width: 320px; height: 62px; margin-top: 1rem; }
 
-    /* Take / Pass Glowing Buttons */
-    .take-pass-btn { width: 140px; height: 62px; cursor: pointer; color: #fff; font-size: 16px; font-weight: 900; letter-spacing: 2px; border-radius: 1rem; border: none; position: relative; background: #100720; transition: 0.1s; display: flex; align-items: center; justify-content: center; outline: none; }
-    .take-pass-btn::after { content: ''; width: 100%; height: 100%; background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%); filter: blur(15px); z-index: -1; position: absolute; left: 0; top: 0; border-radius: 1rem; }
-    .take-pass-btn:active { transform: scale(0.9) rotate(3deg); background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%); transition: 0.2s; }
-
-    /* Kabak Next Match Button CSS */
-    .next-match-btn { height: 60px; margin: 10px auto; width: 100%; max-width: 320px; background: #333; display: flex; justify-content: center; cursor: pointer; align-items: center; font-family: Consolas, Courier New, monospace; border: solid #404c5d 1px; font-size: 16px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: rgb(161, 161, 161); transition: 500ms; border-radius: 8px; background: linear-gradient(145deg, #2e2d2d, #212121); box-shadow: -1px -5px 15px #41465b, 5px 5px 15px #41465b, inset 5px 5px 10px #212121, inset -5px -5px 10px #212121; }
-    .next-match-btn:hover { box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78; color: #d6d6d6; transition: 500ms; }
-    .next-match-btn:active { box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78; color: #d6d6d6; transition: 100ms; }
-
-    /* Shine Text CSS (THE DECK ANIMATION) */
+    /* Shine Text CSS (THE DECK ANIMATION RESTORED) */
     .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
     @-webkit-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
@@ -209,7 +269,7 @@ const FlipCard = ({ isFlipped, status }) => {
   const elimGradient = 'linear-gradient(to left, #ff416c, #ff4b2b)';
 
   return (
-    <div className="my-6 relative w-[190px] h-[254px] [perspective:1000px] font-sans group">
+    <div className="my-6 relative w-[190px] h-[254px] [perspective:1000px] font-sans group z-20">
       <div 
         className="relative w-full h-full text-center transition-transform duration-[600ms] [transform-style:preserve-3d]"
         style={{ transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
@@ -341,7 +401,7 @@ export default function GameBoard() {
       {phase === 'lobby' ? (
         isDayMode ? <MorningSky /> : <MidnightSky />
       ) : (
-        <ActiveGameBackground />
+        <PastelGlowBackground />
       )}
       
       {/* --- LOBBY PHASE --- */}
@@ -362,10 +422,19 @@ export default function GameBoard() {
             </label>
           </div>
 
-          {/* DAY/NIGHT TOGGLE SWITCH - TOP RIGHT */}
+          {/* DAY/NIGHT TOGGLE SWITCH - TOP RIGHT - GLITCH FIXED */}
           <div className="fixed top-6 right-6 z-40 shadow-xl rounded-full">
             <label className="theme-switch" htmlFor="theme-switch-toggle">
-              <input type="checkbox" id="theme-switch-toggle" className="theme-switch__checkbox" checked={!isDayMode} onChange={() => handleAction(() => setIsDayMode(!isDayMode))} />
+              <input 
+                type="checkbox" 
+                id="theme-switch-toggle" 
+                className="theme-switch__checkbox" 
+                checked={!isDayMode} 
+                onChange={(e) => {
+                  sfx.init(); sfx.tap();
+                  setIsDayMode(!e.target.checked);
+                }} 
+              />
               <div className="theme-switch__container">
                 <div className="theme-switch__clouds"></div>
                 <div className="theme-switch__stars-container">
@@ -494,8 +563,8 @@ export default function GameBoard() {
       {/* --- PEEK PHASE --- */}
       {phase === 'peek' && (
         <div className="relative z-10 flex flex-col items-center w-full animate-fade-in py-6">
-          <p className="text-white uppercase tracking-widest text-[10px] mb-2 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Current Player</p>
-          <h2 className="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{players[0]?.name}</h2>
+          <p className="text-slate-800 uppercase tracking-widest text-[10px] mb-2 font-bold drop-shadow-sm">Current Player</p>
+          <h2 className="text-3xl font-black tracking-widest uppercase text-slate-900 drop-shadow-md">{players[0]?.name}</h2>
 
           <div 
             onMouseDown={onHoldStart} onMouseUp={onHoldEnd} onMouseLeave={onHoldEnd}
@@ -508,7 +577,7 @@ export default function GameBoard() {
           <button 
             onClick={() => handleDelayedAction(goToChoicePhase)}
             disabled={!hasPeeked || isHoldingCard}
-            className={`w-full max-w-xs mt-4 py-5 rounded-2xl bg-[#B8E3E9] text-slate-900 font-black tracking-[0.2em] shadow-lg transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100 active:scale-95'}`}
+            className="neon-btn neon-btn-wide"
           >
             HIDE & PROCEED
           </button>
@@ -518,24 +587,24 @@ export default function GameBoard() {
       {/* --- CHOICE PHASE --- */}
       {phase === 'choice' && (
         <div className="relative z-10 flex flex-col items-center w-full animate-fade-in py-6">
-          <p className="text-white uppercase tracking-widest text-[10px] mb-2 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Challenger</p>
-          <h2 className="text-3xl font-black tracking-widest uppercase text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{players[1]?.name}</h2>
+          <p className="text-slate-800 uppercase tracking-widest text-[10px] mb-2 font-bold drop-shadow-sm">Challenger</p>
+          <h2 className="text-3xl font-black tracking-widest uppercase text-slate-900 mb-2 drop-shadow-md">{players[1]?.name}</h2>
 
           <FlipCard isFlipped={false} status={cardStatus} />
 
-          <p className="text-white tracking-widest uppercase text-[10px] mt-6 mb-3 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Determine Fate</p>
+          <p className="text-slate-800 tracking-widest uppercase text-[10px] mt-6 mb-3 font-bold drop-shadow-sm">Determine Fate</p>
 
           <div className="flex w-full max-w-sm justify-center gap-6 mt-4">
             <button 
               onClick={() => handleDelayedAction(() => makeChoice('STEAL'), sfx.tap)}
-              className="take-pass-btn"
+              className="neon-btn neon-btn-half"
             >
               TAKE
             </button>
 
             <button 
               onClick={() => handleDelayedAction(() => makeChoice('LEAVE'), sfx.tap)}
-              className="take-pass-btn"
+              className="neon-btn neon-btn-half"
             >
               PASS
             </button>
@@ -548,18 +617,18 @@ export default function GameBoard() {
         <div className="relative z-10 flex flex-col items-center w-full animate-fade-in text-center py-6">
           <FlipCard isFlipped={true} status={cardStatus} />
 
-          <div className="mt-4 mb-6 w-full max-w-xs bg-[#181818] border border-slate-700 shadow-xl rounded-2xl py-5">
-            <h2 className="text-3xl font-black text-white uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
+          <div className="mt-4 mb-6 w-full max-w-xs bg-white/90 backdrop-blur-sm border border-slate-100 shadow-xl rounded-2xl py-5">
+            <h2 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">{roundResult.loser.name}</h2>
             <p className="text-rose-500 font-bold tracking-[0.3em] uppercase text-[10px]">Eliminated</p>
-            <div className="h-px w-1/3 bg-slate-700 mx-auto my-3"></div>
-            <p className="text-slate-400 text-[10px] tracking-widest uppercase font-bold">
+            <div className="h-px w-1/3 bg-slate-200 mx-auto my-3"></div>
+            <p className="text-slate-500 text-[10px] tracking-widest uppercase font-bold">
               Win Streak: {displayStreak} / {Math.max(initialRoster.length - 1, 2)}
             </p>
           </div>
 
           <button 
             onClick={() => handleDelayedAction(nextRound)}
-            className="next-match-btn"
+            className="neon-btn neon-btn-wide"
           >
             NEXT MATCH
           </button>
@@ -572,7 +641,7 @@ export default function GameBoard() {
           
           <button 
             onClick={() => handleDelayedAction(backToLobby)}
-            className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-black/50 backdrop-blur-sm border border-slate-700 shadow-lg rounded-lg text-slate-300 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
+            className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-white/90 backdrop-blur-sm border border-slate-200 shadow-lg rounded-lg text-slate-700 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
           >
             <svg className="h-4 w-4 mr-1 transition-transform duration-300 group-active:-translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor">
               <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
@@ -580,13 +649,13 @@ export default function GameBoard() {
             BACK
           </button>
 
-          <div className="w-24 h-24 bg-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(255,255,255,0.1)] flex items-center justify-center rounded-full text-5xl mb-6 border-2 border-white/20">👑</div>
-          <h2 className="text-5xl font-black text-white uppercase tracking-widest mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{players[0]?.name}</h2>
-          <p className="text-yellow-400 font-black tracking-[0.4em] mb-16 uppercase text-sm drop-shadow-md">Game Champion</p>
+          <div className="w-24 h-24 bg-white/50 backdrop-blur-md shadow-[0_10px_40px_rgba(255,255,255,0.4)] flex items-center justify-center rounded-full text-5xl mb-6 border-2 border-white/80">👑</div>
+          <h2 className="text-5xl font-black text-slate-900 uppercase tracking-widest mb-4 drop-shadow-[0_2px_4px_rgba(255,255,255,0.8)]">{players[0]?.name}</h2>
+          <p className="text-[#a855f7] font-black tracking-[0.4em] mb-16 uppercase text-sm drop-shadow-md">Game Champion</p>
           
           <button 
             onClick={() => handleDelayedAction(playAgain)}
-            className="next-match-btn" 
+            className="neon-btn neon-btn-wide" 
           >
             PLAY AGAIN
           </button>
