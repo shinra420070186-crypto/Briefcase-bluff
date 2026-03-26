@@ -136,7 +136,7 @@ const GlobalStyles = () => (
 
     /* Day/Night Theme Switch CSS */
     .theme-switch {
-      --toggle-size: 8px; /* Adjusted to fit nicely on mobile top right */
+      --toggle-size: 8px;
       --container-width: 5.625em;
       --container-height: 2.5em;
       --container-radius: 6.25em;
@@ -180,7 +180,7 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
 
     /* ====================================================
-       WENDELL47 BUTTON CSS (For HIDE & PROCEED only)
+       WENDELL47 BUTTON CSS (Scoped)
        ==================================================== */
     .wendell-btn {
       display: inline-flex;
@@ -191,11 +191,11 @@ const GlobalStyles = () => (
       position: relative;
       overflow: hidden;
       border-radius: 10rem;
-      transition: all 0.2s;
+      transition: all 0.02s;
       font-weight: bold;
       cursor: pointer;
       color: rgb(37, 37, 37);
-      background-color: #ffffff; /* Explicit background for physical feel */
+      background-color: #ffffff;
       z-index: 0;
       box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
     }
@@ -219,7 +219,7 @@ const GlobalStyles = () => (
       align-items: center;
       justify-content: center;
       z-index: 1;
-      pointer-events: none; /* Allows text to be clicked without interruption */
+      pointer-events: none;
     }
     
     .wendell-hoverEffect div {
@@ -249,10 +249,9 @@ const GlobalStyles = () => (
       100% { transform: rotate(360deg); }
     }
 
-    /* Helper classes for styling text and layout within our game */
     .wendell-text {
       position: relative;
-      z-index: 2; /* Ensures text is visible above the hover effect */
+      z-index: 2;
       letter-spacing: 0.2em;
       text-transform: uppercase;
     }
@@ -323,10 +322,22 @@ export default function GameBoard() {
     if (phase === 'peek') setHasPeeked(false);
   }, [phase]);
 
+  // Original instant handler for fast UI actions (Add/Remove players, Rules)
   const handleAction = (actionCallback, soundEffect = sfx.tap) => {
     sfx.init();
     if (soundEffect) soundEffect.bind(sfx)();
     if (actionCallback) actionCallback();
+  };
+
+  // --- NEW: DELAYED ACTION FOR MAJOR PAGE TRANSITIONS ---
+  const handleDelayedAction = (actionCallback, soundEffect = sfx.tap) => {
+    sfx.init();
+    if (soundEffect) soundEffect.bind(sfx)();
+    if (actionCallback) {
+      setTimeout(() => {
+        actionCallback();
+      }, 200); // Gives time to see the button press CSS animations
+    }
   };
 
   const handleAddPlayer = () => {
@@ -512,7 +523,7 @@ export default function GameBoard() {
             </div>
 
             <button 
-              onClick={() => handleAction(startGame)}
+              onClick={() => handleDelayedAction(startGame)}
               disabled={players.length < 2}
               className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
                 players.length < 2 
@@ -547,14 +558,12 @@ export default function GameBoard() {
           </div>
 
           <button 
-            onClick={() => handleAction(goToChoicePhase)}
+            onClick={() => handleDelayedAction(goToChoicePhase)}
             disabled={!hasPeeked || isHoldingCard}
             className={`wendell-btn wendell-btn-wide mt-4 transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
             <span className="wendell-text">HIDE & PROCEED</span>
-            <div className="wendell-hoverEffect">
-              <div></div>
-            </div>
+            <div className="wendell-hoverEffect"><div></div></div>
           </button>
         </div>
       )}
@@ -571,7 +580,7 @@ export default function GameBoard() {
 
           <div className="flex w-full max-w-xs gap-4">
             <button 
-              onClick={() => handleAction(() => makeChoice('STEAL'), sfx.tap)}
+              onClick={() => handleDelayedAction(() => makeChoice('STEAL'), sfx.tap)}
               className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
             >
               <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
@@ -582,7 +591,7 @@ export default function GameBoard() {
             </button>
 
             <button 
-              onClick={() => handleAction(() => makeChoice('LEAVE'), sfx.tap)}
+              onClick={() => handleDelayedAction(() => makeChoice('LEAVE'), sfx.tap)}
               className="group relative flex-1 p-0 bg-transparent border-none outline-none touch-manipulation cursor-pointer"
             >
               <span className="absolute inset-0 w-full h-full rounded-2xl bg-black/15 translate-y-[2px] transition-transform duration-300 group-active:translate-y-[1px] group-active:duration-[34ms]"></span>
@@ -610,7 +619,7 @@ export default function GameBoard() {
           </div>
 
           <button 
-            onClick={() => handleAction(nextRound)}
+            onClick={() => handleDelayedAction(nextRound)}
             className="w-full max-w-xs py-5 bg-slate-800 text-white rounded-2xl font-black tracking-[0.2em] shadow-xl active:scale-95 transition-transform"
           >
             NEXT MATCH
@@ -623,7 +632,7 @@ export default function GameBoard() {
         <div className="relative z-10 flex flex-col items-center animate-fade-in text-center mt-16 w-full">
           
           <button 
-            onClick={() => handleAction(backToLobby)}
+            onClick={() => handleDelayedAction(backToLobby)}
             className="group fixed top-6 right-6 flex items-center justify-center h-10 px-3 bg-white border border-slate-200 shadow-sm rounded-lg text-slate-600 font-bold tracking-widest uppercase text-[10px] active:scale-95 active:-translate-y-1 active:shadow-md transition-all duration-200 z-50"
           >
             <svg className="h-4 w-4 mr-1 transition-transform duration-300 group-active:-translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor">
@@ -637,7 +646,7 @@ export default function GameBoard() {
           <p className="text-emerald-500 font-bold tracking-[0.3em] mb-16 uppercase text-xs">Game Champion</p>
           
           <button 
-            onClick={() => handleAction(playAgain)}
+            onClick={() => handleDelayedAction(playAgain)}
             className="px-8 py-4 bg-white border-2 border-slate-200 shadow-md rounded-2xl text-slate-800 font-bold tracking-[0.2em] active:bg-slate-50 transition-colors"
           >
             PLAY AGAIN
