@@ -67,42 +67,56 @@ const GAME_STYLES = `
   .magic-card::after { position: absolute; content: ""; top: 30px; left: 0; right: 0; z-index: -1; height: 100%; width: 100%; transform: scale(0.8); filter: blur(25px); background: var(--bg-gradient, linear-gradient(to left, #f7ba2b 0%, #ea5358 100%)); transition: opacity .5s; }
   .magic-card-info { background: #181818; color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; overflow: hidden; border-radius: .7rem; }
   .magic-card:hover::after { opacity: 0; }
-
-  /* UNIFIED GLOWING NEON BUTTONS */
-  .neon-btn { cursor: pointer; color: #fff; font-size: 16px; font-weight: 900; letter-spacing: 2px; border-radius: 1rem; border: none; position: relative; background: #100720; transition: 0.1s; display: flex; align-items: center; justify-content: center; outline: none; z-index: 10; -webkit-tap-highlight-color: transparent; }
-  .neon-btn::after { content: ''; width: 100%; height: 100%; background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%); filter: blur(15px); z-index: -1; position: absolute; left: 0; top: 0; border-radius: 1rem; }
-  .neon-btn:active { transform: scale(0.9) rotate(3deg); background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%); transition: 0.2s; }
-  .neon-btn:disabled { opacity: 0.5; pointer-events: none; }
-  .neon-btn-half { width: 140px; height: 62px; }
-  .neon-btn-wide { width: 100%; max-width: 320px; height: 62px; margin-top: 1rem; }
-
-  /* Shine Text Animation (The Deck) */
   .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
   @keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
-  /* Poda Input */
-  .poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; }
-  .poda-input { background-color: #010201; border: none; width: 100%; height: 56px; border-radius: 10px; color: white; padding-inline: 59px; font-size: 16px; font-weight: bold; outline: none; }
-  .poda-input::placeholder { color: #5a545a; font-weight: normal; }
-  .poda-main { position: relative; width: 100%; }
-  .poda-main:focus-within > .poda-input-mask { display: none; }
-  .poda-input-mask { pointer-events: none; width: 100px; height: 20px; position: absolute; background: linear-gradient(90deg, transparent, #010201); top: 18px; left: 70px; }
-  .poda-pink-mask { pointer-events: none; width: 30px; height: 20px; position: absolute; background: #cf30aa; top: 10px; left: 5px; filter: blur(20px); opacity: 0.8; transition: all 2s; }
-  .poda-main:hover > .poda-pink-mask { opacity: 0; }
-  .poda-white, .poda-border, .poda-darkBorderBg, .poda-glow { max-height: 70px; max-width: 314px; height: 100%; width: 100%; position: absolute; overflow: hidden; z-index: -1; border-radius: 12px; filter: blur(3px); }
-  .poda-white { max-height: 63px; max-width: 307px; border-radius: 10px; filter: blur(2px); }
-  .poda-white::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(83deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; filter: brightness(1.4); background-image: conic-gradient(rgba(0,0,0,0) 0%, #a099d8, rgba(0,0,0,0) 8%, rgba(0,0,0,0) 50%, #dfa2da, rgba(0,0,0,0) 58%); transition: all 2s; }
-  .poda-border { max-height: 59px; max-width: 303px; border-radius: 11px; filter: blur(0.5px); }
-  .poda-border::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(70deg); position: absolute; width: 600px; height: 600px; filter: brightness(1.3); background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(#1c191c, #402fb5 5%, #1c191c 14%, #1c191c 50%, #cf30aa 60%, #1c191c 64%); transition: all 2s; }
-  .poda-darkBorderBg { max-height: 65px; max-width: 312px; }
-  .poda-darkBorderBg::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(82deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(rgba(0,0,0,0), #18116a, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 50%, #6e1b60, rgba(0,0,0,0) 60%); transition: all 2s; }
-  .poda-glow { overflow: hidden; filter: blur(30px); opacity: 0.4; max-height: 130px; max-width: 354px; }
-  .poda-glow::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(60deg); position: absolute; width: 999px; height: 999px; background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(#000, #402fb5 5%, #000 38%, #000 50%, #cf30aa 60%, #000 87%); transition: all 2s; }
-  .poda-add-btn { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center; z-index: 2; max-height: 40px; max-width: 38px; height: 100%; width: 100%; isolation: isolate; overflow: hidden; border-radius: 10px; background: linear-gradient(180deg, #161329, black, #1d1b4b); border: 1px solid transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .poda-add-btn:active { transform: scale(0.95); }
-  .poda-filterBorder { height: 42px; width: 40px; position: absolute; overflow: hidden; top: 7px; right: 7px; border-radius: 10px; pointer-events: none; }
-  .poda-filterBorder::before { content: ""; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; filter: brightness(1.35); background-image: conic-gradient(rgba(0,0,0,0), #3d3a4f, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 50%, #3d3a4f, rgba(0,0,0,0) 100%); animation: p-rotate 4s linear infinite; }
-  .poda-search-icon { position: absolute; left: 20px; top: 15px; pointer-events: none; }
+  /* ==============================================
+     EXACT WENDELL47 BUTTON CSS
+     ============================================== */
+  .wendell-btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 30px; border: 0; position: relative; overflow: hidden; border-radius: 10rem; transition: all 0.02s; font-weight: bold; cursor: pointer; color: white; background: #151515; z-index: 10; box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5); outline: none; -webkit-tap-highlight-color: transparent; }
+  .wendell-btn:hover { background: rgb(193, 228, 248); color: rgb(33, 0, 85); }
+  .wendell-btn:active { transform: scale(0.97); }
+  .wendell-btn .hoverEffect { position: absolute; bottom: 0; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }
+  .wendell-btn .hoverEffect div { background: linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%); border-radius: 40rem; width: 10rem; height: 10rem; transition: 0.4s; filter: blur(20px); animation: wendell-effect infinite 3s linear; opacity: 0.5; }
+  .wendell-btn:hover .hoverEffect div { width: 8rem; height: 8rem; }
+  .wendell-btn span.btn-text { position: relative; z-index: 2; letter-spacing: 2px; text-transform: uppercase; }
+  .wendell-btn-half { width: 140px; height: 62px; }
+  .wendell-btn-wide { width: 100%; max-width: 320px; height: 62px; margin-top: 1rem; }
+  @keyframes wendell-effect { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  /* ==============================================
+     EXACT LAKSHAY-ART PODA INPUT CSS
+     ============================================== */
+  #poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; z-index: 10; }
+  .white, .border, .darkBorderBg, .glow { max-height: 70px; max-width: 314px; height: 100%; width: 100%; position: absolute; overflow: hidden; z-index: -1; border-radius: 12px; filter: blur(3px); }
+  .input { background-color: #010201; border: none; width: 301px; height: 56px; border-radius: 10px; color: white; padding-inline: 59px; font-size: 18px; outline: none; }
+  .input::placeholder { color: #c0b9c0; }
+  #main { position: relative; width: 100%; }
+  #main:focus-within > #input-mask { display: none; }
+  #input-mask { pointer-events: none; width: 100px; height: 20px; position: absolute; background: linear-gradient(90deg, transparent, black); top: 18px; left: 70px; }
+  #pink-mask { pointer-events: none; width: 30px; height: 20px; position: absolute; background: #cf30aa; top: 10px; left: 5px; filter: blur(20px); opacity: 0.8; transition: all 2s; }
+  #main:hover > #pink-mask { opacity: 0; }
+  .white { max-height: 63px; max-width: 307px; border-radius: 10px; filter: blur(2px); }
+  .white::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(83deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; filter: brightness(1.4); background-image: conic-gradient(rgba(0,0,0,0) 0%, #a099d8, rgba(0,0,0,0) 8%, rgba(0,0,0,0) 50%, #dfa2da, rgba(0,0,0,0) 58%); transition: all 2s; }
+  .border { max-height: 59px; max-width: 303px; border-radius: 11px; filter: blur(0.5px); }
+  .border::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(70deg); position: absolute; width: 600px; height: 600px; filter: brightness(1.3); background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(#1c191c, #402fb5 5%, #1c191c 14%, #1c191c 50%, #cf30aa 60%, #1c191c 64%); transition: all 2s; }
+  .darkBorderBg { max-height: 65px; max-width: 312px; }
+  .darkBorderBg::before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(82deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(rgba(0,0,0,0), #18116a, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 50%, #6e1b60, rgba(0,0,0,0) 60%); transition: all 2s; }
+  #poda:hover > .darkBorderBg::before { transform: translate(-50%, -50%) rotate(-98deg); }
+  #poda:hover > .glow::before { transform: translate(-50%, -50%) rotate(-120deg); }
+  #poda:hover > .white::before { transform: translate(-50%, -50%) rotate(-97deg); }
+  #poda:hover > .border::before { transform: translate(-50%, -50%) rotate(-110deg); }
+  #poda:focus-within > .darkBorderBg::before { transform: translate(-50%, -50%) rotate(442deg); transition: all 4s; }
+  #poda:focus-within > .glow::before { transform: translate(-50%, -50%) rotate(420deg); transition: all 4s; }
+  #poda:focus-within > .white::before { transform: translate(-50%, -50%) rotate(443deg); transition: all 4s; }
+  #poda:focus-within > .border::before { transform: translate(-50%, -50%) rotate(430deg); transition: all 4s; }
+  .glow { overflow: hidden; filter: blur(30px); opacity: 0.4; max-height: 130px; max-width: 354px; }
+  .glow:before { content: ""; z-index: -2; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(60deg); position: absolute; width: 999px; height: 999px; background-repeat: no-repeat; background-position: 0 0; background-image: conic-gradient(#000, #402fb5 5%, #000 38%, #000 50%, #cf30aa 60%, #000 87%); transition: all 2s; }
+  #filter-icon { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center; z-index: 2; max-height: 40px; max-width: 38px; height: 100%; width: 100%; isolation: isolate; overflow: hidden; border-radius: 10px; background: linear-gradient(180deg, #161329, black, #1d1b4b); border: 1px solid transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  #filter-icon:active { transform: scale(0.95); }
+  .filterBorder { height: 42px; width: 40px; position: absolute; overflow: hidden; top: 7px; right: 7px; border-radius: 10px; pointer-events: none; z-index: 1; }
+  .filterBorder::before { content: ""; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); position: absolute; width: 600px; height: 600px; background-repeat: no-repeat; background-position: 0 0; filter: brightness(1.35); background-image: conic-gradient(rgba(0,0,0,0), #3d3a4f, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 50%, #3d3a4f, rgba(0,0,0,0) 100%); animation: p-rotate 4s linear infinite; }
+  #search-icon { position: absolute; left: 20px; top: 15px; pointer-events: none; z-index: 2; }
   @keyframes p-rotate { 100% { transform: translate(-50%, -50%) rotate(450deg); } }
 
   /* Day/Night Theme Switch */
@@ -369,35 +383,36 @@ export default function GameBoard() {
               The Deck
             </h1>
             
+            {/* EXACT LAKSHAY-ART PODA INPUT */}
             <div className="w-full mb-10 flex justify-center">
-              <div className="poda">
-                <div className="poda-glow"></div>
-                <div className="poda-darkBorderBg"></div>
-                <div className="poda-darkBorderBg"></div>
-                <div className="poda-darkBorderBg"></div>
-                <div className="poda-white"></div>
-                <div className="poda-border"></div>
-                <div className="poda-main">
+              <div id="poda">
+                <div className="glow"></div>
+                <div className="darkBorderBg"></div>
+                <div className="darkBorderBg"></div>
+                <div className="darkBorderBg"></div>
+                <div className="white"></div>
+                <div className="border"></div>
+                <div id="main">
                   <input 
                     placeholder="Enter Name..." 
                     type="text" 
                     value={newPlayerName}
                     onChange={(e) => setNewPlayerName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
-                    className="poda-input" 
+                    className="input" 
                   />
-                  <div className="poda-input-mask"></div>
-                  <div className="poda-pink-mask"></div>
-                  <div className="poda-filterBorder"></div>
+                  <div id="input-mask"></div>
+                  <div id="pink-mask"></div>
+                  <div className="filterBorder"></div>
                   
-                  <div className="poda-add-btn" onClick={handleAddPlayer}>
+                  <div id="filter-icon" onClick={handleAddPlayer}>
                     <svg preserveAspectRatio="none" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="#d6d6e6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
                       <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
                   </div>
                   
-                  <div className="poda-search-icon">
+                  <div id="search-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" height="24" fill="none">
                       <path stroke="url(#search)" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle stroke="url(#searchl)" cx="12" cy="7" r="4"></circle>
@@ -446,19 +461,10 @@ export default function GameBoard() {
             <button 
               onClick={() => handleDelayedAction(startGame)}
               disabled={players.length < 2}
-              className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
-                players.length < 2 
-                  ? 'bg-[#222] text-slate-500 opacity-50 pointer-events-none' 
-                  : 'bg-white text-slate-900 active:scale-[0.97]'
-              }`}
+              className={`wendell-btn wendell-btn-wide ${players.length < 2 ? 'opacity-50 pointer-events-none' : ''}`}
             >
-              <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
-                <div 
-                  className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
-                  style={{ background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)' }}
-                ></div>
-              </div>
-              <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
+              <span className="btn-text">START MATCH</span>
+              <div className="hoverEffect"><div></div></div>
             </button>
           </div>
         </>
@@ -481,9 +487,10 @@ export default function GameBoard() {
           <button 
             onClick={() => handleDelayedAction(goToChoicePhase)}
             disabled={!hasPeeked || isHoldingCard}
-            className="neon-btn neon-btn-wide"
+            className={`wendell-btn wendell-btn-wide ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
-            HIDE & PROCEED
+            <span className="btn-text">HIDE & PROCEED</span>
+            <div className="hoverEffect"><div></div></div>
           </button>
         </div>
       )}
@@ -501,16 +508,18 @@ export default function GameBoard() {
           <div className="flex w-full max-w-sm justify-center gap-6 mt-4">
             <button 
               onClick={() => handleDelayedAction(() => makeChoice('STEAL'), sfx.tap)}
-              className="neon-btn neon-btn-half"
+              className="wendell-btn wendell-btn-half"
             >
-              TAKE
+              <span className="btn-text">TAKE</span>
+              <div className="hoverEffect"><div></div></div>
             </button>
 
             <button 
               onClick={() => handleDelayedAction(() => makeChoice('LEAVE'), sfx.tap)}
-              className="neon-btn neon-btn-half"
+              className="wendell-btn wendell-btn-half"
             >
-              PASS
+              <span className="btn-text">PASS</span>
+              <div className="hoverEffect"><div></div></div>
             </button>
           </div>
         </div>
@@ -532,9 +541,10 @@ export default function GameBoard() {
 
           <button 
             onClick={() => handleDelayedAction(nextRound)}
-            className="neon-btn neon-btn-wide"
+            className="wendell-btn wendell-btn-wide"
           >
-            NEXT MATCH
+            <span className="btn-text">NEXT MATCH</span>
+            <div className="hoverEffect"><div></div></div>
           </button>
         </div>
       )}
@@ -559,9 +569,10 @@ export default function GameBoard() {
           
           <button 
             onClick={() => handleDelayedAction(playAgain)}
-            className="neon-btn neon-btn-wide" 
+            className="wendell-btn wendell-btn-wide" 
           >
-            PLAY AGAIN
+            <span className="btn-text">PLAY AGAIN</span>
+            <div className="hoverEffect"><div></div></div>
           </button>
         </div>
       )}
