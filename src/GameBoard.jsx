@@ -67,12 +67,8 @@ const GAME_STYLES = `
   .magic-card::after { position: absolute; content: ""; top: 30px; left: 0; right: 0; z-index: -1; height: 100%; width: 100%; transform: scale(0.8); filter: blur(25px); background: var(--bg-gradient, linear-gradient(to left, #f7ba2b 0%, #ea5358 100%)); transition: opacity .5s; }
   .magic-card-info { background: #181818; color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; overflow: hidden; border-radius: .7rem; }
   .magic-card:hover::after { opacity: 0; }
-  .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
-  @keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
-  /* ==============================================
-     EXACT WENDELL47 BUTTON CSS
-     ============================================== */
+  /* THE WENDELL47 BUTTONS (Only used where requested) */
   .wendell-btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 30px; border: 0; position: relative; overflow: hidden; border-radius: 10rem; transition: all 0.02s; font-weight: bold; cursor: pointer; color: white; background: #151515; z-index: 10; box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5); outline: none; -webkit-tap-highlight-color: transparent; }
   .wendell-btn:hover { background: rgb(193, 228, 248); color: rgb(33, 0, 85); }
   .wendell-btn:active { transform: scale(0.97); }
@@ -84,9 +80,11 @@ const GAME_STYLES = `
   .wendell-btn-wide { width: 100%; max-width: 320px; height: 62px; margin-top: 1rem; }
   @keyframes wendell-effect { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-  /* ==============================================
-     EXACT LAKSHAY-ART PODA INPUT CSS
-     ============================================== */
+  /* Shine Text Animation (The Deck) */
+  .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
+  @keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
+
+  /* EXACT LAKSHAY-ART PODA INPUT CSS (Fixed broken comments) */
   #poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; z-index: 10; }
   .white, .border, .darkBorderBg, .glow { max-height: 70px; max-width: 314px; height: 100%; width: 100%; position: absolute; overflow: hidden; z-index: -1; border-radius: 12px; filter: blur(3px); }
   .input { background-color: #010201; border: none; width: 301px; height: 56px; border-radius: 10px; color: white; padding-inline: 59px; font-size: 18px; outline: none; }
@@ -432,6 +430,7 @@ export default function GameBoard() {
               </div>
             </div>
 
+            {/* RECENT PLAYERS (RESTORED PILL DESIGN) */}
             {availableRecentNames.length > 0 && (
               <div className="w-full mb-6">
                 <p className="text-[10px] text-white uppercase tracking-widest mb-3 pl-2 text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Recent Players</p>
@@ -458,13 +457,23 @@ export default function GameBoard() {
               ))}
             </div>
 
+            {/* ORIGINAL CUSTOM START BUTTON RESTORED */}
             <button 
               onClick={() => handleDelayedAction(startGame)}
               disabled={players.length < 2}
-              className={`wendell-btn wendell-btn-wide ${players.length < 2 ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`relative w-full py-5 rounded-[10rem] font-black text-lg tracking-[0.2em] shadow-[0_0_15px_-5px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 ${
+                players.length < 2 
+                  ? 'bg-[#222] text-slate-500 opacity-50 pointer-events-none' 
+                  : 'bg-white text-slate-900 active:scale-[0.97]'
+              }`}
             >
-              <span className="btn-text">START MATCH</span>
-              <div className="hoverEffect"><div></div></div>
+              <div className={`absolute inset-0 flex items-center justify-center z-0 transition-opacity duration-500 ${players.length < 2 ? 'opacity-0' : 'opacity-100'}`}>
+                <div 
+                  className="w-[20rem] h-[20rem] rounded-full blur-[20px] animate-[spin_3s_linear_infinite] opacity-60"
+                  style={{ background: 'linear-gradient(90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100%)' }}
+                ></div>
+              </div>
+              <span className="relative z-10 transition-colors duration-300 drop-shadow-sm">START MATCH</span>
             </button>
           </div>
         </>
