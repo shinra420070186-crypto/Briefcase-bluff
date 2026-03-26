@@ -57,7 +57,7 @@ const MorningSky = () => (
 );
 
 // ==============================================
-// 3. GLOBAL STYLES
+// 3. GLOBAL STYLES (Burger, Rule Cards, Buttons, Magic Card)
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
@@ -85,6 +85,47 @@ const GlobalStyles = () => (
     .cards .card:hover p.second-text, .cards .card:focus p.second-text { opacity: 1; max-height: 50px; margin-top: 8px; }
     .cards:hover > .card:not(:hover), .cards:focus-within > .card:not(:focus) { filter: blur(4px); transform: scale(0.95, 0.95); opacity: 0.7; }
 
+    /* New Magic Card CSS */
+    .magic-card {
+      background: var(--bg-gradient, linear-gradient(to left, #f7ba2b 0%, #ea5358 100%));
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+      border-radius: 1rem;
+      overflow: visible;
+      position: relative;
+      z-index: 1;
+    }
+    .magic-card::after {
+      position: absolute;
+      content: "";
+      top: 30px;
+      left: 0;
+      right: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+      transform: scale(0.8);
+      filter: blur(25px);
+      background: var(--bg-gradient, linear-gradient(to left, #f7ba2b 0%, #ea5358 100%));
+      transition: opacity .5s;
+    }
+    .magic-card-info {
+      background: #181818;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: .7rem;
+    }
+    .magic-card:hover::after {
+      opacity: 0;
+    }
+
     /* Take / Pass Glowing Buttons */
     .take-pass-btn { width: 140px; height: 62px; cursor: pointer; color: #fff; font-size: 16px; font-weight: 900; letter-spacing: 2px; border-radius: 1rem; border: none; position: relative; background: #100720; transition: 0.1s; display: flex; align-items: center; justify-content: center; outline: none; }
     .take-pass-btn::after { content: ''; width: 100%; height: 100%; background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%); filter: blur(15px); z-index: -1; position: absolute; left: 0; top: 0; border-radius: 1rem; }
@@ -95,9 +136,9 @@ const GlobalStyles = () => (
     .next-match-btn:hover { box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78; color: #d6d6d6; transition: 500ms; }
     .next-match-btn:active { box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78; color: #d6d6d6; transition: 100ms; }
 
-    /* Shine Text CSS */
+    /* Shine Text CSS (THE DECK ANIMATION RESTORED) */
     .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
-    @-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
+    @-webkit-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
     /* Neon Animated Input CSS */
     .poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; }
@@ -137,97 +178,51 @@ const GlobalStyles = () => (
     .theme-switch__spot { position: absolute; top: 0.75em; left: 0.312em; width: 0.75em; height: 0.75em; border-radius: var(--container-radius); background-color: var(--spot-color); box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset; }
     .theme-switch__spot:nth-of-type(2) { width: 0.375em; height: 0.375em; top: 0.937em; left: 1.375em; }
     .theme-switch__spot:nth-last-of-type(3) { width: 0.25em; height: 0.25em; top: 0.312em; left: 0.812em; }
-
-    /* =========================================
-       NEW: SMIT-PRAJAPATI 3D GLASSMORPHISM CARD 
-       ========================================= */
-    .smit-parent { width: 260px; height: 300px; perspective: 1000px; margin: 20px auto; }
-    .smit-card { height: 100%; border-radius: 40px; transition: all 0.5s ease-in-out; transform-style: preserve-3d; box-shadow: rgba(0, 0, 0, 0) 40px 50px 25px -40px, rgba(0, 0, 0, 0.2) 0px 25px 25px -5px; }
-    .smit-glass { transform-style: preserve-3d; position: absolute; inset: 8px; border-radius: 45px; border-top-right-radius: 100%; background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.6) 100%); transform: translate3d(0px, 0px, 25px); border-left: 1px solid white; border-bottom: 1px solid white; transition: all 0.5s ease-in-out; }
-    .smit-content { padding: 90px 40px 0px 25px; transform: translate3d(0, 0, 26px); }
-    .smit-title { display: block; font-weight: 900; font-size: 24px; letter-spacing: 2px; }
-    .smit-text { display: block; font-size: 13px; margin-top: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-    .smit-bottom { padding: 10px 12px; transform-style: preserve-3d; position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; align-items: center; justify-content: flex-end; transform: translate3d(0, 0, 26px); }
-    .smit-logo { position: absolute; right: 0; top: 0; transform-style: preserve-3d; }
-    .smit-circle { display: block; position: absolute; aspect-ratio: 1; border-radius: 50%; top: 0; right: 0; box-shadow: rgba(100, 100, 111, 0.2) -10px 10px 20px 0px; -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.2); transition: all 0.5s ease-in-out; }
-    .smit-circle1 { width: 150px; transform: translate3d(0, 0, 20px); top: 8px; right: 8px; }
-    .smit-circle2 { width: 120px; transform: translate3d(0, 0, 40px); top: 10px; right: 10px; -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); transition-delay: 0.2s; }
-    .smit-circle3 { width: 90px; transform: translate3d(0, 0, 60px); top: 15px; right: 15px; transition-delay: 0.4s; }
-    .smit-circle4 { width: 60px; transform: translate3d(0, 0, 80px); top: 20px; right: 20px; transition-delay: 0.6s; }
-    .smit-circle5 { width: 40px; transform: translate3d(0, 0, 100px); top: 25px; right: 25px; display: grid; place-content: center; transition-delay: 0.8s; }
-    .smit-circle5 .svg { width: 18px; fill: white; }
-    
-    /* 3D Hover & Reveal Logic */
-    .smit-parent:hover .smit-card, .smit-parent.revealed .smit-card { transform: rotate3d(1, 1, 0, 25deg); box-shadow: rgba(0, 0, 0, 0.4) 20px 40px 25px -20px, rgba(0, 0, 0, 0.2) 0px 20px 25px 0px; }
-    .smit-parent:hover .smit-logo .smit-circle2, .smit-parent.revealed .smit-logo .smit-circle2 { transform: translate3d(0, 0, 60px); }
-    .smit-parent:hover .smit-logo .smit-circle3, .smit-parent.revealed .smit-logo .smit-circle3 { transform: translate3d(0, 0, 80px); }
-    .smit-parent:hover .smit-logo .smit-circle4, .smit-parent.revealed .smit-logo .smit-circle4 { transform: translate3d(0, 0, 100px); }
-    .smit-parent:hover .smit-logo .smit-circle5, .smit-parent.revealed .smit-logo .smit-circle5 { transform: translate3d(0, 0, 120px); }
   `}</style>
 );
 
 // ==============================================
-// 4. GAME COMPONENTS (NEW 3D REVEAL CARD)
+// 4. GAME COMPONENTS (NEW MAGIC FLIP CARD)
 // ==============================================
 const FlipCard = ({ isFlipped, status }) => {
   const isSafe = status === 'SAFE';
 
-  // Dynamic Styles based on State
-  const cardBg = isFlipped
-    ? (isSafe ? 'linear-gradient(135deg, rgb(0, 255, 214) 0%, rgb(8, 226, 96) 100%)' : 'linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%)')
-    : 'linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%)'; // Cool deck cover
-
-  const textColor = isFlipped
-    ? (isSafe ? '#006400' : '#640000') // Dark green or Dark red
-    : '#1e3a8a'; // Dark blue for deck
-
-  const subTextColor = isFlipped
-    ? (isSafe ? 'rgba(0, 100, 0, 0.8)' : 'rgba(100, 0, 0, 0.8)')
-    : 'rgba(30, 58, 138, 0.8)';
+  // Dynamic Gradients for the Magic Card Background and Shadow
+  const deckGradient = 'linear-gradient(to left, #f7ba2b 0%, #ea5358 100%)';
+  const safeGradient = 'linear-gradient(to left, #00b09b, #96c93d)';
+  const elimGradient = 'linear-gradient(to left, #ff416c, #ff4b2b)';
 
   return (
-    <div className={`smit-parent ${isFlipped ? 'revealed' : ''}`}>
-      <div className="smit-card" style={{ background: cardBg }}>
-        
-        {/* Top Right Circles */}
-        <div className="smit-logo">
-          <span className="smit-circle smit-circle1"></span>
-          <span className="smit-circle smit-circle2"></span>
-          <span className="smit-circle smit-circle3"></span>
-          <span className="smit-circle smit-circle4"></span>
-          <span className="smit-circle smit-circle5">
-            {/* Minimalist diamond/star icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="svg">
-              <path d="M12 2L15 10L23 12L15 14L12 22L9 14L1 12L9 10L12 2Z" />
-            </svg>
-          </span>
-        </div>
-
-        <div className="smit-glass"></div>
-
-        {/* Text Content */}
-        <div className="smit-content">
-          <span className="smit-title" style={{ color: textColor, transition: 'color 0.5s' }}>
-            {isFlipped ? (isSafe ? 'SAFE' : 'ELIMINATE') : 'THE DECK'}
-          </span>
-          <span className="smit-text" style={{ color: subTextColor, transition: 'color 0.5s' }}>
-            {isFlipped
-              ? (isSafe ? 'You survive this round.' : 'Your game ends here.')
-              : 'Hold to peek at your fate.'}
-          </span>
-        </div>
-
-        {/* Bottom Icon */}
-        <div className="smit-bottom">
-          {isFlipped && (
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transition-all duration-500 transform translate-z-[50px]">
-              {isSafe ? (
-                <svg fill="none" height="20px" width="20px" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4" className="text-emerald-500"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-              ) : (
-                <svg fill="none" height="20px" width="20px" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4" className="text-rose-600"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-              )}
+    <div className="my-6 relative w-[190px] h-[254px] [perspective:1000px] font-sans group">
+      <div 
+        className="relative w-full h-full text-center transition-transform duration-[600ms] [transform-style:preserve-3d]"
+        style={{ transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+      >
+        {/* --- BACK SIDE (Cover Side / THE DECK) --- */}
+        <div className="absolute w-full h-full [backface-visibility:hidden]">
+          <div className="magic-card" style={{ '--bg-gradient': deckGradient }}>
+            <div className="magic-card-info">
+              {/* THE DECK ANIMATION RESTORED HERE */}
+              <p className="shine-text text-3xl font-black tracking-widest uppercase m-0">THE DECK</p>
+              <p className="text-[10px] uppercase tracking-widest text-white/50 mt-4">
+                {isFlipped ? 'Revealing...' : 'Hold to View'}
+              </p>
             </div>
-          )}
+          </div>
+        </div>
+
+        {/* --- FRONT SIDE (Revealed Side / SAFE or ELIMINATE) --- */}
+        <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="magic-card" style={{ '--bg-gradient': isSafe ? safeGradient : elimGradient }}>
+            <div className="magic-card-info">
+              <p className={`text-3xl font-black tracking-widest m-0 uppercase drop-shadow-lg ${isSafe ? 'text-emerald-400' : 'text-rose-500'}`}>
+                {status}
+              </p>
+              <p className="text-white/50 mt-4 text-[10px] uppercase tracking-widest">
+                {isSafe ? 'You survived' : 'Game Over'}
+              </p>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -571,7 +566,7 @@ export default function GameBoard() {
           
           <button 
             onClick={() => handleDelayedAction(playAgain)}
-            className="next-match-btn" // Reusing the same badass button!
+            className="next-match-btn" 
           >
             PLAY AGAIN
           </button>
