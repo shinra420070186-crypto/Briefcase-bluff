@@ -246,9 +246,7 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom: -4.062em; }
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
 
-    /* ====================================================
-       CEVOROB BURGER MENU CSS (Top Left)
-       ==================================================== */
+    /* CEVOROB BURGER MENU CSS (Scaled Down) */
     .burger {
       position: relative;
       width: 24px;
@@ -280,9 +278,7 @@ const GlobalStyles = () => (
     .burger input:checked ~ span:nth-of-type(2) { width: 0%; opacity: 0; }
     .burger input:checked ~ span:nth-of-type(3) { transform: rotate(-45deg); top: 15px; left: 4px; }
 
-    /* ====================================================
-       STEALTHWORM BUTTON CSS (Start Match Only)
-       ==================================================== */
+    /* STEALTHWORM BUTTON CSS (Start Match Only) */
     .stealth-btn {
       display: flex;
       justify-content: center;
@@ -353,7 +349,6 @@ const GlobalStyles = () => (
       -webkit-tap-highlight-color: transparent;
     }
     
-    /* Hide logic for the peek phase */
     .play-btn:disabled {
       opacity: 0;
       pointer-events: none;
@@ -374,7 +369,7 @@ const GlobalStyles = () => (
       transition-delay: 300ms;
     }
 
-    .play-btn:hover svg {
+    .play-btn:hover svg, .play-btn:active svg {
       transform: scale(3) translate(50%);
     }
 
@@ -386,12 +381,12 @@ const GlobalStyles = () => (
       z-index: 2;
     }
 
-    .play-btn:hover .play-btn-now {
-      transform: translateX(20px); /* adjusted slightly to sit nicely in the wider button */
+    .play-btn:hover .play-btn-now, .play-btn:active .play-btn-now {
+      transform: translateX(20px); 
       transition-delay: 300ms;
     }
 
-    .play-btn:hover .play-btn-play {
+    .play-btn:hover .play-btn-play, .play-btn:active .play-btn-play {
       transform: translateX(200%);
       transition-delay: 300ms;
     }
@@ -464,14 +459,14 @@ export default function GameBoard() {
     if (actionCallback) actionCallback();
   };
 
-  // --- EXACTLY 250MS DELAY FOR MAJOR PAGE TRANSITIONS ---
-  const handleDelayedAction = (actionCallback, soundEffect = sfx.tap) => {
+  // --- DELAYED ACTION FOR MAJOR PAGE TRANSITIONS (Customizable delay) ---
+  const handleDelayedAction = (actionCallback, soundEffect = sfx.tap, delayMs = 250) => {
     sfx.init();
     if (soundEffect) soundEffect.bind(sfx)();
     if (actionCallback) {
       setTimeout(() => {
         actionCallback();
-      }, 250); // Set to exactly 250ms per request
+      }, delayMs); 
     }
   };
 
@@ -693,7 +688,7 @@ export default function GameBoard() {
 
           {/* NEW: SVG PLAY/NOW BUTTON - REPLACES HIDE & PROCEED */}
           <button 
-            onClick={() => handleDelayedAction(goToChoicePhase)}
+            onClick={() => handleDelayedAction(goToChoicePhase, sfx.tap, 850)}
             disabled={!hasPeeked || isHoldingCard}
             className={`play-btn ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
