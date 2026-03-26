@@ -79,7 +79,7 @@ const MorningSky = () => (
 );
 
 // ==============================================
-// 3. GLOBAL STYLES (FAQ, Neon Rule Card, Shine Text, Neon Input, Day/Night Toggle)
+// 3. GLOBAL STYLES (FAQ, Neon Rule Card, Shine Text, Neon Input, Day/Night Toggle, Wendell Button)
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
@@ -178,6 +178,89 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon { transform: translate(0); }
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom: -4.062em; }
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
+
+    /* ====================================================
+       WENDELL47 BUTTON CSS (For HIDE & PROCEED only)
+       ==================================================== */
+    .wendell-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 30px;
+      border: 0;
+      position: relative;
+      overflow: hidden;
+      border-radius: 10rem;
+      transition: all 0.2s;
+      font-weight: bold;
+      cursor: pointer;
+      color: rgb(37, 37, 37);
+      background-color: #ffffff; /* Explicit background for physical feel */
+      z-index: 0;
+      box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
+    }
+    
+    .wendell-btn:hover {
+      background: rgb(193, 228, 248);
+      color: rgb(33, 0, 85);
+    }
+    
+    .wendell-btn:active {
+      transform: scale(0.97);
+    }
+    
+    .wendell-hoverEffect {
+      position: absolute;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      pointer-events: none; /* Allows text to be clicked without interruption */
+    }
+    
+    .wendell-hoverEffect div {
+      background: rgb(222, 0, 75);
+      background: linear-gradient(
+        90deg,
+        rgba(222, 0, 75, 1) 0%,
+        rgba(191, 70, 255, 1) 49%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      border-radius: 40rem;
+      width: 10rem;
+      height: 10rem;
+      transition: 0.4s;
+      filter: blur(20px);
+      animation: wendell-effect infinite 3s linear;
+      opacity: 0.5;
+    }
+    
+    .wendell-btn:hover .wendell-hoverEffect div {
+      width: 8rem;
+      height: 8rem;
+    }
+    
+    @keyframes wendell-effect {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Helper classes for styling text and layout within our game */
+    .wendell-text {
+      position: relative;
+      z-index: 2; /* Ensures text is visible above the hover effect */
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    
+    .wendell-btn-wide {
+      width: 100%;
+      max-width: 320px;
+    }
   `}</style>
 );
 
@@ -466,9 +549,12 @@ export default function GameBoard() {
           <button 
             onClick={() => handleAction(goToChoicePhase)}
             disabled={!hasPeeked || isHoldingCard}
-            className={`w-full max-w-xs mt-4 py-5 rounded-2xl bg-[#B8E3E9] text-slate-900 font-black tracking-[0.2em] shadow-lg transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100 active:scale-95'}`}
+            className={`wendell-btn wendell-btn-wide mt-4 transition-opacity duration-300 ${!hasPeeked || isHoldingCard ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
-            HIDE & PROCEED
+            <span className="wendell-text">HIDE & PROCEED</span>
+            <div className="wendell-hoverEffect">
+              <div></div>
+            </div>
           </button>
         </div>
       )}
