@@ -83,21 +83,91 @@ const MorningSky = () => (
 // ==============================================
 const GlobalStyles = () => (
   <style>{`
-    /* Neon Rule Card CSS */
-    .neon-card { position: relative; width: 300px; height: 380px; background-color: #000; display: flex; flex-direction: column; justify-content: center; padding: 24px; gap: 16px; border-radius: 8px; cursor: pointer; color: white; }
-    .neon-card::before { content: ''; position: absolute; inset: 0; left: -5px; margin: auto; width: 310px; height: 390px; border-radius: 10px; background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% ); z-index: -10; pointer-events: none; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .neon-card::after { content: ""; z-index: -1; position: absolute; inset: 0; background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% ); transform: translate3d(0, 0, 0) scale(0.95); filter: blur(20px); }
-    .neon-heading { font-size: 24px; text-transform: uppercase; font-weight: 800; color: #e81cff; text-align: center; margin-bottom: 10px; }
-    .neon-card p:not(.neon-heading) { font-size: 14px; line-height: 1.4; color: #ddd; }
-    .neon-card:hover::after, .neon-card:active::after { filter: blur(30px); }
-    .neon-card:hover::before, .neon-card:active::before { transform: rotate(-90deg) scaleX(1.34) scaleY(0.77); }
+    /* FAQ Button Jello Effect */
+    @keyframes jello-vertical { 0% { transform: scale3d(1, 1, 1); } 30% { transform: scale3d(0.75, 1.25, 1); } 40% { transform: scale3d(1.25, 0.75, 1); } 50% { transform: scale3d(0.85, 1.15, 1); } 65% { transform: scale3d(1.05, 0.95, 1); } 75% { transform: scale3d(0.95, 1.05, 1); } 100% { transform: scale3d(1, 1, 1); } }
+    .animate-jello-vertical { animation: jello-vertical 0.7s both; }
+
+    /* ====================================================
+       NEW: RULE CARD CSS (Blob Design)
+       ==================================================== */
+    .rule-card {
+      position: relative;
+      width: 320px; /* Scaled up to fit game rules */
+      height: 420px; /* Scaled up to fit game rules */
+      border-radius: 14px;
+      z-index: 1111;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 15px 50px rgba(0,0,0,0.5); /* Tweaked shadow to look better on dark overlay */
+    }
+
+    .rule-bg {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: 310px;
+      height: 410px;
+      z-index: 2;
+      background: rgba(255, 255, 255, .95);
+      backdrop-filter: blur(24px);
+      border-radius: 10px;
+      overflow: hidden;
+      outline: 2px solid white;
+    }
+
+    .rule-blob {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: #ff0000;
+      opacity: 1;
+      filter: blur(12px);
+      animation: blob-bounce 5s infinite ease;
+    }
+
+    .rule-content {
+      position: relative;
+      z-index: 3;
+      padding: 30px;
+      color: #333; /* Dark text so it's readable on the white frosted bg */
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .rule-heading {
+      font-size: 24px;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: #ff0000; /* Matches the blob */
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    @keyframes blob-bounce {
+      0% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+      25% { transform: translate(-100%, -100%) translate3d(100%, 0, 0); }
+      50% { transform: translate(-100%, -100%) translate3d(100%, 100%, 0); }
+      75% { transform: translate(-100%, -100%) translate3d(0, 100%, 0); }
+      100% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+    }
 
     /* Shine Text CSS */
     .shine-text { color: rgba(255, 255, 255, 0.3); background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat; background-image: -webkit-linear-gradient(-40deg, transparent 0%, transparent 40%, #fff 50%, transparent 60%, transparent 100%); -webkit-background-clip: text; -webkit-background-size: 50px; -webkit-animation: zezzz 5s infinite; }
     @-webkit-keyframes zezzz { 0%, 10% { background-position: -200px; } 20% { background-position: top left; } 100% { background-position: 200px; } }
 
-    /* Neon Animated Input CSS */
-    .poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; }
+    /* EXACT LAKSHAY-ART PODA INPUT CSS */
+    .poda { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 314px; margin: 0 auto; z-index: 10; }
     .poda-input { background-color: #010201; border: none; width: 100%; height: 56px; border-radius: 10px; color: white; padding-inline: 59px; font-size: 16px; font-weight: bold; }
     .poda-input::placeholder { color: #5a545a; font-weight: normal; }
     .poda-input:focus { outline: none; }
@@ -176,41 +246,6 @@ const GlobalStyles = () => (
     .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top: 50%; transform: translateY(-50%); }
 
     /* ====================================================
-       WENDELL47 BUTTON CSS (Hide & Proceed Only)
-       ==================================================== */
-    .wendell-btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 30px; border: 0; position: relative; overflow: hidden; border-radius: 10rem; transition: all 0.02s; font-weight: bold; cursor: pointer; color: rgb(37, 37, 37); background-color: #ffffff; z-index: 0; box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5); width: 100%; max-width: 320px; margin-top: 1rem; outline: none; -webkit-tap-highlight-color: transparent; }
-    .wendell-btn:hover { background: rgb(193, 228, 248); color: rgb(33, 0, 85); }
-    .wendell-btn:active { transform: scale(0.97); }
-    .wendell-hoverEffect { position: absolute; bottom: 0; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }
-    .wendell-hoverEffect div { background: rgb(222, 0, 75); background: linear-gradient( 90deg, rgba(222, 0, 75, 1) 0%, rgba(191, 70, 255, 1) 49%, rgba(0, 212, 255, 1) 100% ); border-radius: 40rem; width: 25rem; height: 25rem; transition: 0.4s; filter: blur(20px); animation: wendell-effect infinite 3s linear; opacity: 0.5; }
-    .wendell-btn:hover .wendell-hoverEffect div { width: 21rem; height: 21rem; }
-    @keyframes wendell-effect { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .wendell-text { position: relative; z-index: 2; letter-spacing: 0.2em; text-transform: uppercase; }
-
-    /* ====================================================
-       STEALTHWORM BUTTON CSS (Start Match Only)
-       ==================================================== */
-    .stealth-btn { display: flex; justify-content: center; align-items: center; width: 100%; max-width: 320px; overflow: hidden; height: 4rem; background-size: 300% 300%; cursor: pointer; backdrop-filter: blur(1rem); border-radius: 5rem; transition: 0.5s; animation: stealth_gradient_301 5s ease infinite; border: double 4px transparent; background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #fe53bb 45%, #8f51ea 67%, #0044ff 87%); background-origin: border-box; background-clip: content-box, border-box; outline: none; -webkit-tap-highlight-color: transparent; position: relative; z-index: 10; }
-    .stealth-btn:disabled { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
-    .stealth-container-stars { position: absolute; z-index: -1; width: 100%; height: 100%; overflow: hidden; transition: 0.5s; backdrop-filter: blur(1rem); border-radius: 5rem; }
-    .stealth-strong { z-index: 2; font-size: 1.125rem; font-weight: 900; letter-spacing: 0.2em; color: #ffffff; text-shadow: 0 0 4px white; text-transform: uppercase; }
-    .stealth-glow { position: absolute; display: flex; width: 12rem; }
-    .stealth-circle { width: 100%; height: 30px; filter: blur(2rem); animation: stealth_pulse_3011 4s infinite; z-index: -1; }
-    .stealth-circle:nth-of-type(1) { background: rgba(254, 83, 186, 0.636); }
-    .stealth-circle:nth-of-type(2) { background: rgba(142, 81, 234, 0.704); }
-    .stealth-btn:hover .stealth-container-stars { z-index: 1; background-color: #212121; }
-    .stealth-btn:hover { transform: scale(1.03); }
-    .stealth-btn:active { border: double 4px #fe53bb; background-origin: border-box; background-clip: content-box, border-box; animation: none; transform: scale(0.97); }
-    .stealth-btn:active .stealth-circle { background: #fe53bb; }
-    .stealth-stars { position: relative; background: transparent; width: 200rem; height: 200rem; }
-    .stealth-stars::after { content: ""; position: absolute; top: -10rem; left: -100rem; width: 100%; height: 100%; animation: stealth_animStarRotate 90s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; }
-    .stealth-stars::before { content: ""; position: absolute; top: 0; left: -50%; width: 170%; height: 500%; animation: stealth_animStar 60s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; opacity: 0.5; }
-    @keyframes stealth_animStar { from { transform: translateY(0); } to { transform: translateY(-135rem); } }
-    @keyframes stealth_animStarRotate { from { transform: rotate(360deg); } to { transform: rotate(0); } }
-    @keyframes stealth_gradient_301 { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes stealth_pulse_3011 { 0% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); } 100% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); } }
-
-    /* ====================================================
        CEVOROB BURGER MENU CSS (Scaled Down)
        ==================================================== */
     .burger {
@@ -243,6 +278,162 @@ const GlobalStyles = () => (
     .burger input:checked ~ span:nth-of-type(1) { transform: rotate(45deg); top: -2px; left: 4px; }
     .burger input:checked ~ span:nth-of-type(2) { width: 0%; opacity: 0; }
     .burger input:checked ~ span:nth-of-type(3) { transform: rotate(-45deg); top: 15px; left: 4px; }
+
+    /* ====================================================
+       WENDELL47 BUTTON CSS (Hide & Proceed Only)
+       ==================================================== */
+    .wendell-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 30px;
+      border: 0;
+      position: relative;
+      overflow: hidden;
+      border-radius: 10rem;
+      transition: all 0.02s;
+      font-weight: bold;
+      cursor: pointer;
+      color: rgb(37, 37, 37);
+      background-color: #ffffff;
+      z-index: 0;
+      box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 320px;
+      margin-top: 1rem;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .wendell-btn:hover {
+      background: rgb(193, 228, 248);
+      color: rgb(33, 0, 85);
+    }
+    
+    .wendell-btn:active {
+      transform: scale(0.97);
+    }
+    
+    .wendell-hoverEffect {
+      position: absolute;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .wendell-hoverEffect div {
+      background: rgb(222, 0, 75);
+      background: linear-gradient(
+        90deg,
+        rgba(222, 0, 75, 1) 0%,
+        rgba(191, 70, 255, 1) 49%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      border-radius: 40rem;
+      width: 25rem; 
+      height: 25rem; 
+      transition: 0.4s;
+      filter: blur(20px);
+      animation: wendell-effect infinite 3s linear;
+      opacity: 0.5;
+    }
+    
+    .wendell-btn:hover .wendell-hoverEffect div {
+      width: 21rem;
+      height: 21rem;
+    }
+    
+    @keyframes wendell-effect {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .wendell-text {
+      position: relative;
+      z-index: 2;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ====================================================
+       STEALTHWORM BUTTON CSS (Start Match Only)
+       ==================================================== */
+    .stealth-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      overflow: hidden;
+      height: 4rem;
+      background-size: 300% 300%;
+      cursor: pointer;
+      backdrop-filter: blur(1rem);
+      border-radius: 5rem;
+      transition: 0.5s;
+      animation: stealth_gradient_301 5s ease infinite;
+      border: double 4px transparent;
+      background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #fe53bb 45%, #8f51ea 67%, #0044ff 87%);
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .stealth-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(1);
+    }
+    .stealth-container-stars {
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      transition: 0.5s;
+      backdrop-filter: blur(1rem);
+      border-radius: 5rem;
+    }
+    .stealth-strong {
+      z-index: 2;
+      font-size: 1.125rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: #ffffff;
+      text-shadow: 0 0 4px white;
+    }
+    .stealth-glow {
+      position: absolute;
+      display: flex;
+      width: 12rem;
+    }
+    .stealth-circle {
+      width: 100%;
+      height: 30px;
+      filter: blur(2rem);
+      animation: stealth_pulse_3011 4s infinite;
+      z-index: -1;
+    }
+    .stealth-circle:nth-of-type(1) { background: rgba(254, 83, 186, 0.636); }
+    .stealth-circle:nth-of-type(2) { background: rgba(142, 81, 234, 0.704); }
+    .stealth-btn:hover .stealth-container-stars { z-index: 1; background-color: #212121; }
+    .stealth-btn:hover { transform: scale(1.05); }
+    .stealth-btn:active { border: double 4px #fe53bb; background-origin: border-box; background-clip: content-box, border-box; animation: none; transform: scale(0.95); }
+    .stealth-btn:active .stealth-circle { background: #fe53bb; }
+    .stealth-stars { position: relative; background: transparent; width: 200rem; height: 200rem; }
+    .stealth-stars::after { content: ""; position: absolute; top: -10rem; left: -100rem; width: 100%; height: 100%; animation: stealth_animStarRotate 90s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; }
+    .stealth-stars::before { content: ""; position: absolute; top: 0; left: -50%; width: 170%; height: 500%; animation: stealth_animStar 60s linear infinite; background-image: radial-gradient(#ffffff 1px, transparent 1%); background-size: 50px 50px; opacity: 0.5; }
+    
+    @keyframes stealth_animStar { from { transform: translateY(0); } to { transform: translateY(-135rem); } }
+    @keyframes stealth_animStarRotate { from { transform: rotate(360deg); } to { transform: rotate(0); } }
+    @keyframes stealth_gradient_301 { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes stealth_pulse_3011 { 0% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); } 100% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); } }
   `}</style>
 );
 
@@ -355,18 +546,22 @@ export default function GameBoard() {
       
       <GlobalStyles />
 
-      {/* --- NEON RULE CARD OVERLAY --- */}
+      {/* --- NEW: BLOB RULE CARD OVERLAY --- */}
       {showRules && (
         <div 
           className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
           onClick={() => handleAction(() => setShowRules(false))} 
         >
-          <div className="neon-card" onClick={(e) => e.stopPropagation()}>
-            <p className="neon-heading">How to Play</p>
-            <p><strong>1. PEEK:</strong> Secretly check your card. It's either SAFE or ELIMINATE.</p>
-            <p><strong>2. FACE:</strong> Keep a straight poker face and hand the phone over.</p>
-            <p><strong>3. FATE:</strong> The Challenger must read your face and choose to TAKE or PASS.</p>
-            <p><strong>4. OUT:</strong> Whoever ends up holding the ELIMINATE card loses!</p>
+          <div className="rule-card" onClick={(e) => e.stopPropagation()}>
+            <div className="rule-bg"></div>
+            <div className="rule-blob"></div>
+            <div className="rule-content">
+              <p className="rule-heading">How to Play</p>
+              <p><strong>1. PEEK:</strong> Secretly check your card. It's either SAFE or ELIMINATE.</p>
+              <p><strong>2. FACE:</strong> Keep a straight poker face and hand the phone over.</p>
+              <p><strong>3. FATE:</strong> The Challenger must read your face and choose to TAKE or PASS.</p>
+              <p><strong>4. OUT:</strong> Whoever ends up holding the ELIMINATE card loses!</p>
+            </div>
           </div>
           <p className="text-center text-white/50 text-xs mt-10 tracking-widest uppercase">Tap background to close</p>
         </div>
@@ -378,7 +573,7 @@ export default function GameBoard() {
       {/* --- LOBBY PHASE --- */}
       {phase === 'lobby' && (
         <>
-          {/* CEVOROB BURGER BUTTON (Replaces FAQ Jello) */}
+          {/* CEVOROB BURGER BUTTON */}
           <div className="fixed top-6 left-6 z-[60]">
             <label className="burger" htmlFor="burger">
               <input 
